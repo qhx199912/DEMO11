@@ -2,58 +2,15 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Rectangle Name="Rectangle3">
-        <KeepTogether>true</KeepTogether>
-        <Top>8.97806cm</Top>
-        <Left>5.87785cm</Left>
-        <Height>1.34111cm</Height>
-        <Width>4.05787cm</Width>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-            <Width>1.5pt</Width>
-          </Border>
-        </Style>
-      </Rectangle>
-      <Rectangle Name="Rectangle2">
-        <ReportItems>
-          <Image Name="Image2">
-            <Source>Database</Source>
-            <Value>=System.Convert.FromBase64String(Parameters!ReportParameter1.Value)</Value>
-            <MIMEType>image/png</MIMEType>
-            <Sizing>Fit</Sizing>
-            <Height>1.23542cm</Height>
-            <Width>7.05493cm</Width>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-            </Style>
-          </Image>
-        </ReportItems>
-        <KeepTogether>true</KeepTogether>
-        <Top>3.46287cm</Top>
-        <Left>2.88078cm</Left>
-        <Height>2.09118cm</Height>
-        <Width>7.05493cm</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-            <Width>1.5pt</Width>
-          </Border>
-        </Style>
-      </Rectangle>
       <Image Name="Image1">
         <Source>Database</Source>
         <Value>=System.Convert.FromBase64String(Parameters!ReportParameter2.Value)</Value>
         <MIMEType>image/png</MIMEType>
-        <Sizing>FitProportional</Sizing>
+        <Sizing>Fit</Sizing>
         <Top>0.65828cm</Top>
         <Left>0.09314cm</Left>
-        <Height>2.30243cm</Height>
-        <Width>2.61125cm</Width>
-        <ZIndex>2</ZIndex>
+        <Height>3cm</Height>
+        <Width>3cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -78,86 +35,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>1.24078cm</Top>
-        <Left>2.88078cm</Left>
+        <Left>3.81077cm</Left>
         <Height>0.9175cm</Height>
         <Width>5.01354cm</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>Solid</Style>
-            <Width>1.5pt</Width>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Li-ion Bettery Prism</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Model                       BATTypXXX</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Nominal  Voltage       355V</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Nominal  Capacity     37Ah</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Nominal  Energy       131kWh</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Weight                     125kg</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>6.03677cm</Top>
-        <Left>2.88078cm</Left>
-        <Height>2.7649cm</Height>
-        <Width>7.05493cm</Width>
-        <ZIndex>4</ZIndex>
+        <ZIndex>1</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -187,10 +68,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>0.65828cm</Top>
-        <Left>8.07071cm</Left>
+        <Left>9.84737cm</Left>
         <Height>0.9175cm</Height>
         <Width>1.865cm</Width>
-        <ZIndex>5</ZIndex>
+        <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -220,10 +101,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>1.75217cm</Top>
-        <Left>8.07071cm</Left>
+        <Left>9.84737cm</Left>
         <Height>0.9175cm</Height>
         <Width>1.865cm</Width>
-        <ZIndex>6</ZIndex>
+        <ZIndex>3</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -248,19 +129,33 @@
                 </Style>
               </TextRun>
             </TextRuns>
-            <Style />
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox5</rd:DefaultName>
-        <Top>4.87467cm</Top>
-        <Left>5.1cm</Left>
+        <Top>4.76884cm</Top>
+        <Left>3.81077cm</Left>
         <Height>0.67938cm</Height>
-        <Width>2.5cm</Width>
-        <ZIndex>7</ZIndex>
+        <Width>7.9016cm</Width>
+        <ZIndex>4</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
+          <BottomBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </BottomBorder>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -271,12 +166,12 @@
         <Source>Database</Source>
         <Value>=System.Convert.FromBase64String(Parameters!ReportParameter2.Value)</Value>
         <MIMEType>image/png</MIMEType>
-        <Sizing>FitProportional</Sizing>
+        <Sizing>Fit</Sizing>
         <Top>4.30953cm</Top>
         <Left>0.09314cm</Left>
-        <Height>2.37312cm</Height>
-        <Width>2.61125cm</Width>
-        <ZIndex>8</ZIndex>
+        <Height>3cm</Height>
+        <Width>3cm</Width>
+        <ZIndex>5</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
@@ -301,10 +196,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>8.97806cm</Top>
-        <Left>0.37042cm</Left>
+        <Left>0.05292cm</Left>
         <Height>1.04979cm</Height>
         <Width>5.33104cm</Width>
-        <ZIndex>9</ZIndex>
+        <ZIndex>6</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -336,12 +231,16 @@
         <Top>8.97806cm</Top>
         <Left>6.13516cm</Left>
         <Height>0.6cm</Height>
-        <Width>3.50951cm</Width>
-        <ZIndex>10</ZIndex>
+        <Width>5.57721cm</Width>
+        <ZIndex>7</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
           </Border>
+          <BottomBorder>
+            <Style>None</Style>
+          </BottomBorder>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -355,7 +254,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value />
+                <Value>=Parameters!ReportParameter4.Value</Value>
                 <Style>
                   <FontSize>12pt</FontSize>
                 </Style>
@@ -365,15 +264,19 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox9</rd:DefaultName>
-        <Top>9.71917cm</Top>
+        <Top>9.57806cm</Top>
         <Left>6.13516cm</Left>
         <Height>0.6cm</Height>
-        <Width>3.50951cm</Width>
-        <ZIndex>11</ZIndex>
+        <Width>5.57721cm</Width>
+        <ZIndex>8</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
           </Border>
+          <TopBorder>
+            <Style>None</Style>
+          </TopBorder>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -397,11 +300,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>10.55279cm</Top>
-        <Left>0.37042cm</Left>
+        <Top>11.02904cm</Top>
+        <Left>0.05292cm</Left>
         <Height>0.9175cm</Height>
         <Width>2.60583cm</Width>
-        <ZIndex>12</ZIndex>
+        <ZIndex>9</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -430,11 +333,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>10.55279cm</Top>
-        <Left>3.70904cm</Left>
+        <Top>11.02904cm</Top>
+        <Left>3.14536cm</Left>
         <Height>0.9175cm</Height>
         <Width>1.44166cm</Width>
-        <ZIndex>13</ZIndex>
+        <ZIndex>10</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -463,11 +366,11 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>10.55279cm</Top>
-        <Left>5.87785cm</Left>
+        <Top>11.02904cm</Top>
+        <Left>5.08091cm</Left>
         <Height>0.9175cm</Height>
         <Width>3.08208cm</Width>
-        <ZIndex>14</ZIndex>
+        <ZIndex>11</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -508,10 +411,10 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>10.55279cm</Top>
-        <Left>9.52987cm</Left>
+        <Left>8.57737cm</Left>
         <Height>1.84354cm</Height>
         <Width>3.135cm</Width>
-        <ZIndex>15</ZIndex>
+        <ZIndex>12</ZIndex>
         <Style>
           <Border>
             <Style>Solid</Style>
@@ -523,11 +426,399 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
+      <Image Name="Image2">
+        <Source>Database</Source>
+        <Value>=System.Convert.FromBase64String(Parameters!ReportParameter1.Value)</Value>
+        <MIMEType>image/png</MIMEType>
+        <Sizing>Fit</Sizing>
+        <Top>3.53342cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>1.23542cm</Height>
+        <Width>7.9016cm</Width>
+        <ZIndex>13</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <TopBorder>
+            <Color>Black</Color>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </TopBorder>
+          <LeftBorder>
+            <Color>Black</Color>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <RightBorder>
+            <Color>Black</Color>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+        </Style>
+      </Image>
+      <Textbox Name="Textbox25">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Li-ion Bettery Prism</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>5.7cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>7.9016cm</Width>
+        <ZIndex>14</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <TopBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </TopBorder>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox26">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Model</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.1cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>3.7cm</Width>
+        <ZIndex>15</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox27">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Weight</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>7.7cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>3.7cm</Width>
+        <ZIndex>16</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BottomBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </BottomBorder>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox28">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Nominal  Voltage</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.5cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>3.7cm</Width>
+        <ZIndex>17</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox29">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Nominal  Capacity</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.9cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>3.7cm</Width>
+        <ZIndex>18</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox30">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Nominal  Energy</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>7.3cm</Top>
+        <Left>3.81077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>3.7cm</Width>
+        <ZIndex>19</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <LeftBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </LeftBorder>
+          <PaddingLeft>2pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox31">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Parameters!ReportParameter5.Value</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.1cm</Top>
+        <Left>7.55841cm</Left>
+        <Height>0.4cm</Height>
+        <Width>4.15396cm</Width>
+        <ZIndex>20</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>15pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox32">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>125kg</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>7.7cm</Top>
+        <Left>7.51077cm</Left>
+        <Height>0.4cm</Height>
+        <Width>4.2cm</Width>
+        <ZIndex>21</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BottomBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </BottomBorder>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>15pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox33">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>355V</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.5cm</Top>
+        <Left>7.55841cm</Left>
+        <Height>0.4cm</Height>
+        <Width>4.15396cm</Width>
+        <ZIndex>22</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>15pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox34">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>37Ah</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>6.9cm</Top>
+        <Left>7.55841cm</Left>
+        <Height>0.4cm</Height>
+        <Width>4.15396cm</Width>
+        <ZIndex>23</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>15pt</PaddingLeft>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox35">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>131kWh</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox25</rd:DefaultName>
+        <Top>7.3cm</Top>
+        <Left>7.55841cm</Left>
+        <Height>0.4cm</Height>
+        <Width>4.15396cm</Width>
+        <ZIndex>24</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <RightBorder>
+            <Style>Solid</Style>
+            <Width>1.5pt</Width>
+          </RightBorder>
+          <PaddingLeft>15pt</PaddingLeft>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>5.2955in</Height>
+    <Height>5.01425in</Height>
     <Style />
   </Body>
-  <Width>4.98617in</Width>
+  <Width>4.71192in</Width>
   <Page>
     <PageHeight>50cm</PageHeight>
     <PageWidth>12cm</PageWidth>
@@ -554,6 +845,18 @@
       <DataType>String</DataType>
       <Nullable>true</Nullable>
       <Prompt>ReportParameter3</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter4">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter4</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter5">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter5</Prompt>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>

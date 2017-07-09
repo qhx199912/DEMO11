@@ -25,15 +25,15 @@ namespace IDCodePrinter
         {
             InitializeComponent();
 
-            try
-            {
-                pictureBox2.Image = Encode_DM("# 3Q0.915.590.F#131355100#", 5, 10);
-                pictureBox1.Image = Encode_EAN_13("12345678");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //try
+            //{
+            //    pictureBox2.Image = Encode_DM("# 3Q0.915.590.F#131355100#", 5, 10);
+            //    pictureBox1.Image = Encode_EAN_13("12345678");
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         public static Bitmap Encode_DM(string content, int moduleSize = 5, int margin = 5)
@@ -99,7 +99,8 @@ namespace IDCodePrinter
         {
             try
             {
-                //comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox1.SelectedIndex = 0;
                 //foreach (string ptname in PrinterSettings.InstalledPrinters)//获取打印机列表
                 //{
                 //    comboBox1.Items.Add(ptname);
@@ -107,19 +108,22 @@ namespace IDCodePrinter
                 //}
                 reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
 
-                Image img = Encode_EAN_13("12345678");
+                Image img = Encode_EAN_13(textBox2.Text);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                Image img2 = Encode_DM("# 3Q0.915.590.F#131355100#", 5, 10);
+                Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", "77889900");
+                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
 
-                reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2, ReportParam3 });
+                reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
+                    ReportParam3, ReportParam4, ReportParam5 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
@@ -131,20 +135,23 @@ namespace IDCodePrinter
         private void button1_Click(object sender, EventArgs e)
         {
             LocalReport report = new LocalReport();
-            report.ReportPath = @"Report1.rdlc";
+            report.ReportPath = @".\Report\Report1.rdlc";
 
-            Image img = Encode_EAN_13("12345678");
+            Image img = Encode_EAN_13(textBox2.Text);
             Bitmap imgBit = new Bitmap(img);
             byte[] imgBytes = BitmapToBytes(imgBit);
 
-            Image img2 = Encode_DM("# 3Q0.915.590.F#131355100#", 5, 10);
+            Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
             Bitmap imgBit2 = new Bitmap(img2);
             byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
             ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
             ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-            ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", "77889900");
-            report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2, ReportParam3 });
+            ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
+            ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
+            ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
+            report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
+                    ReportParam3, ReportParam4, ReportParam5 });
 
             report.Refresh();
 
