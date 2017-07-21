@@ -16,6 +16,7 @@ using EAN8Writer = com.google.zxing.oned.EAN8Writer;
 using com.google.zxing;
 using DataMatrix.net;
 using S7;
+using Spire.Pdf;
 
 namespace IDCodePrinter
 {
@@ -97,39 +98,8 @@ namespace IDCodePrinter
 
         private void IDCodePrinter_Load(object sender, EventArgs e)
         {
-            try
-            {
-                comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-                comboBox1.SelectedIndex = 0;
-                //foreach (string ptname in PrinterSettings.InstalledPrinters)//获取打印机列表
-                //{
-                //    comboBox1.Items.Add(ptname);
-                //    comboBox1.SelectedIndex = 0;
-                //}
-                reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
-
-                Image img = Encode_EAN_13(textBox2.Text);
-                Bitmap imgBit = new Bitmap(img);
-                byte[] imgBytes = BitmapToBytes(imgBit);
-
-                Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
-                Bitmap imgBit2 = new Bitmap(img2);
-                byte[] imgBytes2 = BitmapToBytes(imgBit2);
-
-                ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
-                ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
-                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
-
-                reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5 });
-                reportViewer1.RefreshReport();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -157,16 +127,34 @@ namespace IDCodePrinter
 
             string deviceInfo = "<DeviceInfo>" +
                 "  <OutputFormat>EMF</OutputFormat>" +
-                "  <PageWidth>12cm</PageWidth>" +
-                "  <PageHeight>50cm</PageHeight>" +
+                "  <PageWidth>9.5cm</PageWidth>" +
+                "  <PageHeight>9.5cm</PageHeight>" +
                 "  <MarginTop>0cm</MarginTop>" +
                 "  <MarginLeft>0cm</MarginLeft>" +
                 "  <MarginRight>0cm</MarginRight>" +
                 "  <MarginBottom>0cm</MarginBottom>" +
                 "</DeviceInfo>";
             Warning[] warnings;
-            report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
-            Print();//执行打印
+            //report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
+            //Print();//执行打印
+
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string extension;
+
+            byte[] bytes = report.Render(
+               "PDF", deviceInfo, out mimeType, out encoding, out extension,
+               out streamids, out warnings);
+
+            FileStream fs = new FileStream(@"output.pdf", FileMode.Create);
+            fs.Write(bytes, 0, bytes.Length);
+            fs.Close();
+
+            PdfDocument doc = new PdfDocument();
+            doc.LoadFromFile(@"output.pdf");
+            //doc.PageScaling = PdfPrintPageScaling.ActualSize;
+            doc.PrintDocument.Print();
         }
 
         private List<Stream> m_streams;
@@ -192,6 +180,8 @@ namespace IDCodePrinter
                 MessageBox.Show("Can't find printer");
                 return;
             }
+            //printDoc.DefaultPageSettings.PaperSize.Height = 590;
+            //printDoc.DefaultPageSettings.PaperSize.Width = 472;
             printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
             printDoc.Print();
         }
@@ -206,6 +196,42 @@ namespace IDCodePrinter
             m_streams[m_currentPageIndex].Close();
             m_currentPageIndex++;
             ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //foreach (string ptname in PrinterSettings.InstalledPrinters)//获取打印机列表
+                //{
+                //    comboBox1.Items.Add(ptname);
+                //    comboBox1.SelectedIndex = 0;
+                //}
+                //reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
+                reportViewer1.LocalReport.ReportPath = @".\Report\Report1.rdlc";
+
+                Image img = Encode_EAN_13(textBox2.Text);
+                Bitmap imgBit = new Bitmap(img);
+                byte[] imgBytes = BitmapToBytes(imgBit);
+
+                Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
+                Bitmap imgBit2 = new Bitmap(img2);
+                byte[] imgBytes2 = BitmapToBytes(imgBit2);
+
+                ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
+                ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
+                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
+
+                reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
+                    ReportParam3, ReportParam4, ReportParam5 });
+                reportViewer1.RefreshReport();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
