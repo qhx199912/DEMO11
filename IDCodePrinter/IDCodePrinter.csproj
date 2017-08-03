@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code128Lib.cs" />
     <Compile Include="IDCodePrinter.cs">
       <SubType>Form</SubType>
     </Compile>

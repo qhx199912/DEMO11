@@ -13,6 +13,8 @@ using System.IO;
 using System.Drawing.Printing;
 using ByteMatrix = com.google.zxing.common.ByteMatrix;
 using EAN8Writer = com.google.zxing.oned.EAN8Writer;
+using Code39Writer = com.google.zxing.oned.Code39Writer;
+using MultiFormatWriter = com.google.zxing.MultiFormatWriter;
 using com.google.zxing;
 using DataMatrix.net;
 using S7;
@@ -51,13 +53,30 @@ namespace IDCodePrinter
             return bm;
         }
 
-        public static Bitmap Encode_EAN_13(string content)
+        public static Bitmap Encode_EAN_8(string content)
         {
             EAN8Writer ean8w = new EAN8Writer();
             ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.EAN_8, 300, 200);
             Bitmap bitmap = ByteMatrixToBitmap(byteMatrix);
 
             return bitmap;
+        }
+
+        public static Bitmap Encode_Code_39(string content)
+        {
+            Code39Writer ean8w = new Code39Writer();
+            
+            ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.CODE_39, 500, 38);
+            Bitmap bitmap = ByteMatrixToBitmap(byteMatrix);
+
+            return bitmap;
+        }
+
+        public static Bitmap Encode_Code_128(string content)
+        {
+            Code128 _Code = new Code128();
+            //_Code.ValueFont = new Font("宋体", 20);
+            return _Code.GetCodeImage(content, Code128.Encode.Code128A);
         }
 
         public static Bitmap ByteMatrixToBitmap(ByteMatrix matrix)
@@ -98,30 +117,31 @@ namespace IDCodePrinter
 
         private void IDCodePrinter_Load(object sender, EventArgs e)
         {
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.SelectedIndex = 0;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            DateTime datetime = DateTime.Now;
             LocalReport report = new LocalReport();
             report.ReportPath = @".\Report\Report1.rdlc";
 
-            Image img = Encode_EAN_13(textBox2.Text);
+            Image img = Encode_Code_39(textBox1.Text + textBox3.Text);//Encode_EAN_8(textBox2.Text);
             Bitmap imgBit = new Bitmap(img);
             byte[] imgBytes = BitmapToBytes(imgBit);
 
-            Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
+            Image img2 = Encode_DM(textBox4.Text + textBox2.Text + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#", 5, 10);
             Bitmap imgBit2 = new Bitmap(img2);
             byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
             ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
             ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-            ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
-            ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
-            ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
+            ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
+            ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+            ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
+            ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
+            ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", textBox2.Text);
             report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
 
             report.Refresh();
 
@@ -129,10 +149,10 @@ namespace IDCodePrinter
                 "  <OutputFormat>EMF</OutputFormat>" +
                 "  <PageWidth>9.5cm</PageWidth>" +
                 "  <PageHeight>9.5cm</PageHeight>" +
-                "  <MarginTop>0cm</MarginTop>" +
-                "  <MarginLeft>0cm</MarginLeft>" +
-                "  <MarginRight>0cm</MarginRight>" +
-                "  <MarginBottom>0cm</MarginBottom>" +
+                "  <MarginTop>0.1cm</MarginTop>" +
+                "  <MarginLeft>0.1cm</MarginLeft>" +
+                "  <MarginRight>0.1cm</MarginRight>" +
+                "  <MarginBottom>0.1cm</MarginBottom>" +
                 "</DeviceInfo>";
             Warning[] warnings;
             //report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
@@ -192,7 +212,9 @@ namespace IDCodePrinter
             Metafile pageImage = new Metafile(m_streams[m_currentPageIndex]);
 
             ev.PageSettings.Landscape = false;//指定是否横向打印
-            ev.Graphics.DrawImage(pageImage, 0, 0);
+            Rectangle destRect = new Rectangle(0, 0, pageImage.Width, pageImage.Height);//设置打印区域大小
+            ev.Graphics.DrawImage(pageImage, destRect);
+            //ev.Graphics.DrawImage(pageImage, 0, 0);
             m_streams[m_currentPageIndex].Close();
             m_currentPageIndex++;
             ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
@@ -202,6 +224,7 @@ namespace IDCodePrinter
         {
             try
             {
+                DateTime datetime = DateTime.Now;
                 //foreach (string ptname in PrinterSettings.InstalledPrinters)//获取打印机列表
                 //{
                 //    comboBox1.Items.Add(ptname);
@@ -210,22 +233,24 @@ namespace IDCodePrinter
                 //reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
                 reportViewer1.LocalReport.ReportPath = @".\Report\Report1.rdlc";
 
-                Image img = Encode_EAN_13(textBox2.Text);
+                Image img = Encode_Code_39(textBox1.Text + textBox3.Text); //Encode_EAN_8(textBox2.Text);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                Image img2 = Encode_DM("# 3Q0.915.590.F#" + textBox1.Text + "#", 5, 10);
+                Image img2 = Encode_DM(textBox4.Text + textBox2.Text + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#", 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox2.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", dateTimePicker1.Text);
-                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", comboBox1.SelectedItem.ToString());
+                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
+                ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", textBox2.Text);
 
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
