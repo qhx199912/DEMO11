@@ -173,6 +173,7 @@ namespace IDCodePrinter
 
             PdfDocument doc = new PdfDocument();
             doc.LoadFromFile(@"output.pdf");
+            //doc.PDFStandard.SaveToXPS("output.xps");
             //doc.PageScaling = PdfPrintPageScaling.ActualSize;
             doc.PrintDocument.Print();
         }
@@ -211,8 +212,12 @@ namespace IDCodePrinter
             m_streams[m_currentPageIndex].Position = 0;
             Metafile pageImage = new Metafile(m_streams[m_currentPageIndex]);
 
+            //ev.Graphics.PageUnit = GraphicsUnit.Millimeter;//设置图片长度单位
             ev.PageSettings.Landscape = false;//指定是否横向打印
-            Rectangle destRect = new Rectangle(0, 0, pageImage.Width, pageImage.Height);//设置打印区域大小
+            //1cm 0.3937008in
+            //9cm 3.543in 乘100 -> 354
+            //9.5cm 3.740in 乘100 -> 374
+            Rectangle destRect = new Rectangle(0, 0, 374, 374);//设置打印区域大小
             ev.Graphics.DrawImage(pageImage, destRect);
             //ev.Graphics.DrawImage(pageImage, 0, 0);
             m_streams[m_currentPageIndex].Close();
