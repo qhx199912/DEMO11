@@ -88,6 +88,7 @@
     <EmbeddedResource Include="Report\Report1.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -111,6 +112,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BIW.Common.CrashReport\BIW.Common.CrashReport.csproj">
+      <Project>{67912bda-1572-46b0-8623-5872d9dadbc8}</Project>
+      <Name>BIW.Common.CrashReport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BIW.DataConversionLibrary\BIW.DataConversionLibrary.csproj">
+      <Project>{500480be-0b04-495d-8ca5-f1c665c3806f}</Project>
+      <Name>BIW.DataConversionLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogR\LogR.csproj">
+      <Project>{76ea5f5a-07fd-403f-b901-ee185e728bbc}</Project>
+      <Name>LogR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\S7.Net\S7.Net.csproj">
       <Project>{bfd484f9-3f04-42a2-bf2a-60a189a25dcf}</Project>
       <Name>S7.Net</Name>

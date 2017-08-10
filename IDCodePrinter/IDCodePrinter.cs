@@ -20,6 +20,10 @@ using DataMatrix.net;
 using S7;
 using Spire.Pdf;
 
+using LogR;
+using BIW.DataConversionLibrary;
+using DataStorage;
+
 namespace IDCodePrinter
 {
     public partial class IDCodePrinter : Form
@@ -27,7 +31,7 @@ namespace IDCodePrinter
         public IDCodePrinter()
         {
             InitializeComponent();
-
+            Logger.Info("IDCodePrinter Start" + Application.ProductVersion);
             //try
             //{
             //    pictureBox2.Image = Encode_DM("# 3Q0.915.590.F#131355100#", 5, 10);

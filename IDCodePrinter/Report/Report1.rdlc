@@ -8,7 +8,7 @@
         <MIMEType>image/png</MIMEType>
         <Sizing>Fit</Sizing>
         <Top>0.2614cm</Top>
-        <Left>0.2734cm</Left>
+        <Left>0.37223cm</Left>
         <Height>2.3cm</Height>
         <Width>2.3cm</Width>
         <Style>
@@ -103,9 +103,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>1.09953cm</Top>
-        <Left>7.85473cm</Left>
+        <Left>7.51077cm</Left>
         <Height>0.73229cm</Height>
-        <Width>1.23cm</Width>
+        <Width>1.57396cm</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -124,7 +124,7 @@
         <MIMEType>image/png</MIMEType>
         <Sizing>Fit</Sizing>
         <Top>3.07425cm</Top>
-        <Left>0.2734cm</Left>
+        <Left>0.37223cm</Left>
         <Height>2.3cm</Height>
         <Width>2.3cm</Width>
         <ZIndex>4</ZIndex>
@@ -155,7 +155,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>6.17605cm</Top>
-        <Left>0.2734cm</Left>
+        <Left>0.37923cm</Left>
         <Height>1.2cm</Height>
         <Width>4.77542cm</Width>
         <ZIndex>5</ZIndex>
@@ -261,7 +261,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>7.66737cm</Top>
-        <Left>0.2734cm</Left>
+        <Left>0.37923cm</Left>
         <Height>0.70583cm</Height>
         <Width>2.56458cm</Width>
         <ZIndex>8</ZIndex>
@@ -294,7 +294,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>7.66737cm</Top>
-        <Left>3.20503cm</Left>
+        <Left>3.23358cm</Left>
         <Height>0.70583cm</Height>
         <Width>3.21167cm</Width>
         <ZIndex>9</ZIndex>

@@ -103,7 +103,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(32, 21);
             this.textBox1.TabIndex = 15;
-            this.textBox1.Text = "0001";
+            this.textBox1.Text = "0200";
             // 
             // label3
             // 
@@ -118,9 +118,9 @@
             // 
             this.textBox3.Location = new System.Drawing.Point(290, 50);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(26, 21);
+            this.textBox3.Size = new System.Drawing.Size(52, 21);
             this.textBox3.TabIndex = 17;
-            this.textBox3.Text = "001";
+            this.textBox3.Text = "H05";
             // 
             // label4
             // 
