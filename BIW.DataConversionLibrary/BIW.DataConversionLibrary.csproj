@@ -49,6 +49,7 @@
     <Compile Include="DataStorageLib.cs" />
     <Compile Include="DESLib.cs" />
     <Compile Include="JsonConverLib.cs" />
+    <Compile Include="NewDBLib.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
