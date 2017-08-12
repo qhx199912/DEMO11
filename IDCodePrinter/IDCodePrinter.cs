@@ -29,6 +29,7 @@ using System.IO.Ports;
 
 namespace IDCodePrinter
 {
+    delegate void printTagDelegate(string packSN);
     public partial class IDCodePrinter : Form
     {
         PLC plc = null;
@@ -67,8 +68,8 @@ namespace IDCodePrinter
                 SPort.BaudRate = int.Parse(ConfigurationManager.AppSettings["ScannerBaudRate"].ToString());
                 //SPort.Parity = Parity.None;
                 //SPort.StopBits = StopBits.One;
-                //SPort.ReadTimeout = 1000;
-                //SPort.WriteTimeout = 1000;
+                SPort.ReadTimeout = 2000;
+                SPort.WriteTimeout = 2000;
                 SPort.Open();
             }
             catch (Exception ex)
@@ -125,13 +126,13 @@ namespace IDCodePrinter
                             step1(/*ref stepNum, ref type, json*/);
                         else if (readBuff[3] == 1 && stepNum == 1)
                             step2(/*ref stepNum, ref type, json, ref packSN*/);
-                        else if (readBuff[5] == 1 && stepNum == 2)
+                        else if (readBuff[9] == 1 && stepNum == 2)
                             step3(/*ref stepNum, packSN*/);
-                        else if (readBuff[7] == 1 && stepNum == 3)
+                        else if (readBuff[11] == 1 && stepNum == 3)
                             step4(/*ref stepNum, packSN*/);
-                        else if (readBuff[9] == 1 && stepNum == 4)
+                        else if (readBuff[5] == 1 && stepNum == 4)
                             step5(/*ref stepNum, packSN*/);
-                        else if (readBuff[11] == 1 && stepNum == 5)
+                        else if (readBuff[7] == 1 && stepNum == 5)
                             step6(/*ref stepNum, json*/);
                         //else if (readBuff[13] == 1 && stepNum == 6)
                         //    step7(/*ref stepNum*/);
@@ -172,10 +173,7 @@ namespace IDCodePrinter
 
             if (json.ToString() != "")
             {
-                if (json["Type"].ToString() == "PHEV")
-                    type = 1;
-                if (json["Type"].ToString() == "BEV")
-                    type = 2;
+                type = byte.Parse(json["Type"].ToString());
             }
             else
                 type = 101;
@@ -246,16 +244,27 @@ namespace IDCodePrinter
         void step6(/*ref int stepNum, string packSN*/)
         {
             //扫描二维码 比对是否与打印一致
-            //byte[] SPSendBuff = new byte[100];
-            //byte[] SPReadBuff = new byte[100];
-            //SPort.Write(SPSendBuff, 0, 20);
-            //SPort.Read(SPReadBuff, 0, 100);
-            //string DMStr = ASCIIEncoding.ASCII.GetString(SPReadBuff);
-
             if (con_scanner())
-                plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
+            {
+                //byte[] SPSendBuff = new byte[100];
+                byte[] SPReadBuff = new byte[100];
+                SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
+                Thread.Sleep(1000);
+                int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
+                byte[] DMCode = new byte[RBuffLen];
+                Array.Copy(SPReadBuff, DMCode, RBuffLen);
+                string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
+                Thread.Sleep(1000);
+                SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
 
-            reSetPram();
+                Logger.Info(DMStr + "->" + DateTime.Now);
+
+                if (DMStr == DataMatrixStr)
+                {
+                    plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
+                    reSetPram();
+                }
+            }
 
             Logger.Info("step6");
         }
@@ -264,17 +273,16 @@ namespace IDCodePrinter
         /// </summary>
         void step3(/*ref int stepNum, string packSN*/)
         {
-            //调用接口 数据解绑
-            PostDataAPI postDataAPI = new PostDataAPI();
+            //调用接口 数据解绑  ->等站完成统一解绑
+            //PostDataAPI postDataAPI = new PostDataAPI();
 
-            string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
-            JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+            //string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
+            //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
-            JObject send = new JObject();
-            send.Add("AGVSN", getjson["AGVID"].ToString());
-            send.Add("PackSN", packSN);
-            getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
-            //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+            //JObject send = new JObject();
+            //send.Add("AGVSN", getjson["AGVID"].ToString());
+            //send.Add("PackSN", packSN);
+            //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
 
             packSNArr = packSN.Split('_');//用于打印的电池包编号
 
@@ -290,9 +298,19 @@ namespace IDCodePrinter
         {
             if (json2["Pack1SN"].ToString() == "" && json2["Pack2SN"].ToString() == "")
             {
-                //写站完成 AGV放行
+                //统一解绑
                 PostDataAPI postDataAPI = new PostDataAPI();
+                string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
+                JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 JObject send = new JObject();
+                send.Add("AGVSN", getjson["AGVID"].ToString());
+                send.Add("PackSN", packSN);
+                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+
+                //写站完成 AGV放行
+                postDataAPI = new PostDataAPI();
+                send = new JObject();
                 send.Add("StationID", "A490");
                 send.Add("Pack1SN", json["Pack1SN"].ToString());
                 send.Add("Pack1Status", json["Pack1Status"].ToString());
@@ -300,7 +318,7 @@ namespace IDCodePrinter
                 send.Add("Pack2Status", json["Pack2Status"].ToString());
                 send.Add("IsReturnRepair", false);
                 send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
-                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
+                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
                 //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
@@ -459,64 +477,69 @@ namespace IDCodePrinter
 
         void printTag(string packSN)
         {
-            //NewDBLib dblib = new NewDBLib();
-            //DataTable dt;
-            DateTime datetime = DateTime.Now;
-            LocalReport report = new LocalReport();
-            report.ReportPath = @".\Report\Report1.rdlc";
+            if (InvokeRequired)
+                Invoke(new printTagDelegate(printTag), new object[] { packSN });
+            else
+            {
+                //NewDBLib dblib = new NewDBLib();
+                //DataTable dt;
+                DateTime datetime = DateTime.Now;
+                LocalReport report = new LocalReport();
+                report.ReportPath = @".\Report\Report1.rdlc";
 
-            Image img = Encode_Code_39(textBox1.Text + textBox3.Text);//Encode_EAN_8(packType);
-            Bitmap imgBit = new Bitmap(img);
-            byte[] imgBytes = BitmapToBytes(imgBit);
+                Image img = Encode_Code_39(textBox1.Text + textBox3.Text);//Encode_EAN_8(packType);
+                Bitmap imgBit = new Bitmap(img);
+                byte[] imgBytes = BitmapToBytes(imgBit);
 
-            DataMatrixStr = textBox4.Text + packSN + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#";
-            Image img2 = Encode_DM(DataMatrixStr, 5, 10);
-            Bitmap imgBit2 = new Bitmap(img2);
-            byte[] imgBytes2 = BitmapToBytes(imgBit2);
+                DataMatrixStr = textBox4.Text + packSN + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#";
+                Image img2 = Encode_DM(DataMatrixStr, 5, 10);
+                Bitmap imgBit2 = new Bitmap(img2);
+                byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
-            ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
-            ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
-            ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-            ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
-            ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
-            ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
-            ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", packSN);
-            report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
+                ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
+                ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
+                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
+                ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", packSN);
+                report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
 
-            report.Refresh();
+                report.Refresh();
 
-            string deviceInfo = "<DeviceInfo>" +
-                "  <OutputFormat>EMF</OutputFormat>" +
-                "  <PageWidth>9.5cm</PageWidth>" +
-                "  <PageHeight>9.5cm</PageHeight>" +
-                "  <MarginTop>0.1cm</MarginTop>" +
-                "  <MarginLeft>0.1cm</MarginLeft>" +
-                "  <MarginRight>0.1cm</MarginRight>" +
-                "  <MarginBottom>0.1cm</MarginBottom>" +
-                "</DeviceInfo>";
-            Warning[] warnings;
-            //report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
-            //Print();//执行打印
+                string deviceInfo = "<DeviceInfo>" +
+                    "  <OutputFormat>EMF</OutputFormat>" +
+                    "  <PageWidth>9.5cm</PageWidth>" +
+                    "  <PageHeight>9.5cm</PageHeight>" +
+                    "  <MarginTop>0.1cm</MarginTop>" +
+                    "  <MarginLeft>0.1cm</MarginLeft>" +
+                    "  <MarginRight>0.1cm</MarginRight>" +
+                    "  <MarginBottom>0.1cm</MarginBottom>" +
+                    "</DeviceInfo>";
+                Warning[] warnings;
+                //report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
+                //Print();//执行打印
 
-            string[] streamids;
-            string mimeType;
-            string encoding;
-            string extension;
+                string[] streamids;
+                string mimeType;
+                string encoding;
+                string extension;
 
-            byte[] bytes = report.Render(
-               "PDF", deviceInfo, out mimeType, out encoding, out extension,
-               out streamids, out warnings);
+                byte[] bytes = report.Render(
+                   "PDF", deviceInfo, out mimeType, out encoding, out extension,
+                   out streamids, out warnings);
 
-            FileStream fs = new FileStream(@"output.pdf", FileMode.Create);
-            fs.Write(bytes, 0, bytes.Length);
-            fs.Close();
+                FileStream fs = new FileStream(@"output.pdf", FileMode.Create);
+                fs.Write(bytes, 0, bytes.Length);
+                fs.Close();
 
-            PdfDocument doc = new PdfDocument();
-            doc.LoadFromFile(@"output.pdf");
-            //doc.PDFStandard.SaveToXPS("output.xps");
-            //doc.PageScaling = PdfPrintPageScaling.ActualSize;
-            doc.PrintDocument.Print();
+                PdfDocument doc = new PdfDocument();
+                doc.LoadFromFile(@"output.pdf");
+                //doc.PDFStandard.SaveToXPS("output.xps");
+                //doc.PageScaling = PdfPrintPageScaling.ActualSize;
+                doc.PrintDocument.Print();
+            }
         }
 
         //private List<Stream> m_streams;
