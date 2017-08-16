@@ -26,10 +26,12 @@ using System.Configuration;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.IO.Ports;
+using System.Net.Sockets;
 
 namespace IDCodePrinter
 {
     delegate void printTagDelegate(string packSN);
+    delegate bool PLCConnDelegate();
     public partial class IDCodePrinter : Form
     {
         PLC plc = null;
@@ -80,10 +82,25 @@ namespace IDCodePrinter
 
         private bool con_plc()
         {
-            if (!plc.IsConnected)
+            if (InvokeRequired)
+                Invoke(new PLCConnDelegate(con_plc));
+            else
             {
-                plc.Open();
-                Logger.Info("重新连接PLC");
+                if (!plc.IsConnected)
+                {
+                    plc.Open();
+                    Logger.Info("重新连接PLC");
+                }
+                if (plc.IsConnected)
+                {
+                    label6.Text = "已连接";
+                    label6.BackColor = Color.Green;
+                }
+                else
+                {
+                    label6.Text = "已断开";
+                    label6.BackColor = Color.Red;
+                }
             }
             return plc.IsConnected;
         }
@@ -99,13 +116,19 @@ namespace IDCodePrinter
         }
 
         string packSN = "";
-        int stepNum = 0;
         JObject json = null;
         JObject json2 = null;
         byte type = 0;
         byte[] readBuff;
         string DataMatrixStr;
         string[] packSNArr;//请勿清空
+
+        bool lastFlag1 = false;
+        bool lastFlag2 = false;
+        bool lastFlag3 = false;
+        bool lastFlag4 = false;
+        bool lastFlag5 = false;
+        bool lastFlag6 = false;
         void S7Thread()
         {
             while (runFlag)
@@ -120,28 +143,26 @@ namespace IDCodePrinter
                     }
 
                     readBuff = plc.ReadBytes(DataType.DataBlock, 160, 0, 14);
+                    //Logger.Info("1-" + readBuff[1] + "|" +
+                    //    "3-" + readBuff[3] + "|" +
+                    //    "9-" + readBuff[9] + "|" +
+                    //    "11-" + readBuff[11] + "|" +
+                    //    "5-" + readBuff[5] + "|" +
+                    //    "7-" + readBuff[7]);
                     if (readBuff != null && readBuff.Length == 14)
                     {
-                        if (readBuff[1] == 1 && stepNum == 0)
-                            step1(/*ref stepNum, ref type, json*/);
-                        else if (readBuff[3] == 1 && stepNum == 1)
-                            step2(/*ref stepNum, ref type, json, ref packSN*/);
-                        else if (readBuff[9] == 1 && stepNum == 2)
-                            step3(/*ref stepNum, packSN*/);
-                        else if (readBuff[11] == 1 && stepNum == 3)
-                            step4(/*ref stepNum, packSN*/);
-                        else if (readBuff[5] == 1 && stepNum == 4)
-                            step5(/*ref stepNum, packSN*/);
-                        else if (readBuff[7] == 1 && stepNum == 5)
-                            step6(/*ref stepNum, json*/);
-                        //else if (readBuff[13] == 1 && stepNum == 6)
-                        //    step7(/*ref stepNum*/);
+                        step1(readBuff[1] == 1);
+                        step2(readBuff[3] == 1);
+                        step3(readBuff[9] == 1);
+                        step4F(readBuff[11] == 1);
+                        step5(readBuff[5] == 1);
+                        step6(readBuff[7] == 1);
                     }
                 }
                 catch(Exception ex)
                 {
                     reSetPram();
-                    Logger.Debug(ex, "S7Thread->" + stepNum + ">");
+                    Logger.Debug(ex, "S7Thread");
                     Thread.Sleep(2000);
                 }
                 Thread.Sleep(500);
@@ -150,7 +171,6 @@ namespace IDCodePrinter
 
         void reSetPram()
         {
-            stepNum = 0;
             packSN = "";
             json = null;
             json2 = null;
@@ -162,139 +182,215 @@ namespace IDCodePrinter
         /// <summary>
         /// 1-获取产品型号
         /// </summary>
-        void step1(/*ref int stepNum, ref byte type, JObject json*/)
+        void step1(bool flag)
         {
-            if (json == null)
-            {
-                PostDataAPI postDataAPI = new PostDataAPI();
-                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
-                json2 = json = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-            }
+            if (lastFlag1 == flag)
+                return;
 
-            if (json.ToString() != "")
-            {
-                type = byte.Parse(json["Type"].ToString());
-            }
+            if (!flag)
+                plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 0x00 });
             else
-                type = 101;
+            {
+                if (json == null)
+                {
+                    try
+                    {
+                        PostDataAPI postDataAPI = new PostDataAPI();
+                        string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
+                        Logger.Info("step1->" + getStr);
+                        json2 = json = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "step1 Data从服务器请求超时");
+                        plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
+                    }
+                }
 
-            if(plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, type }) == ErrorCode.NoError &&
-                type != 101)
-                stepNum++;
+                if (json["AGVSN"].ToString() == "-1")
+                    type = 113;
+                else if (json["Pack1SN"].ToString() == "" && json["Pack2SN"].ToString() == "")
+                    type = 112;
+                else if (json.ToString() != "" && json["Type"].ToString() != "0")
+                {
+                    type = byte.Parse(json["Type"].ToString());
+                }
 
-            Logger.Info("step1");
+                plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, type });
+
+                Logger.Info("step1");
+            }
+            lastFlag1 = flag;
         }
         /// <summary>
         /// 2-获取抓取位置号
         /// </summary>
-        void step2(/*ref int stepNum, ref byte type, JObject json, ref string packSN*/)
+        void step2(bool flag)
         {
-            if (json2["Pack1SN"].ToString() != "")
-            {
-                if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
-                {
-                    packSN = json2["Pack1SN"].ToString();
-                    json2["Pack1SN"] = "";
-                    stepNum++;
-                }
-            }
-            else if (json2["Pack2SN"].ToString() != "")
-            {
-                if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x02 }) == ErrorCode.NoError)
-                {
-                    packSN = json2["Pack2SN"].ToString();
-                    json2["Pack2SN"] = "";
-                    stepNum++;
-                }
-            }
+            if (lastFlag2 == flag)
+                return;
 
-            Logger.Info("step2");
+            if (!flag)
+                plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x00 });
+            else
+            {
+                if (json2["Pack1SN"].ToString() != "")
+                {
+                    if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
+                    {
+                        packSN = json2["Pack1SN"].ToString();
+                        json2["Pack1SN"] = "";
+                    }
+                }
+                else if (json2["Pack2SN"].ToString() != "")
+                {
+                    if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x02 }) == ErrorCode.NoError)
+                    {
+                        packSN = json2["Pack2SN"].ToString();
+                        json2["Pack2SN"] = "";
+                    }
+                }
+
+                Logger.Info("step2");
+            }
+            lastFlag2 = flag;
         }
         /// <summary>
         /// 5-请求条码打印
         /// </summary>
-        void step5(/*ref int stepNum, string packSN*/)
+        void step5(bool flag)
         {
-            string printPackSN = "-";
+            if (lastFlag5 == flag)
+                return;
 
-            bool isOK = false;
-            if (json["Pack1SN"].ToString() == packSN)
-                isOK = json["Pack1Status"].ToString() == "1" ? true : false;
-            if (json["Pack2SN"].ToString() == packSN)
-                isOK = json["Pack2Status"].ToString() == "1" ? true : false;
-
-            if (packSNArr.Length == 2)
+            if (!flag)
+                plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
+            else
             {
-                if (packSNArr[0] == "PHEV")
-                    printPackSN = "SVWAP" + packSNArr[1];
-                else if (packSNArr[0] == "BEV")
-                    printPackSN = "SVWAB" + packSNArr[1];
+                string printPackSN = "";
+
+                bool isOK = false;
+                if (json["Pack1SN"].ToString() == packSN)
+                    isOK = json["Pack1Status"].ToString() == "1" ? true : false;
+                if (json["Pack2SN"].ToString() == packSN)
+                    isOK = json["Pack2Status"].ToString() == "1" ? true : false;
+
+                if (packSNArr.Length == 2)
+                {
+                    if (packSNArr[0] == "PHEV")
+                        printPackSN = "SVWAP" + packSNArr[1];
+                    else if (packSNArr[0] == "BEV")
+                        printPackSN = "SVWAB" + packSNArr[1];
+                }
+
+                if (printPackSN != "")
+                {
+                    try
+                    {
+                        printTag(printPackSN);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "打印机故障");
+                        plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 180 });
+
+                    }
+                    //Thread.Sleep(3000);
+                    plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x01 });
+                }
+                else
+                    DataMatrixStr = "";
+
+                Logger.Info("step5");
             }
-
-            printTag(printPackSN);
-            //Thread.Sleep(3000);
-            if(plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
-                stepNum++;
-
-            Logger.Info("step5");
+            lastFlag5 = flag;
         }
         /// <summary>
         /// 6-请求条码扫描
         /// </summary>
-        void step6(/*ref int stepNum, string packSN*/)
+        void step6(bool flag)
         {
-            //扫描二维码 比对是否与打印一致
-            if (con_scanner())
+            if (lastFlag6 == flag)
+                return;
+
+            if (!flag)
+                plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x00 });
+            else
             {
-                //byte[] SPSendBuff = new byte[100];
-                byte[] SPReadBuff = new byte[100];
-                SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
-                Thread.Sleep(1000);
-                int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
-                byte[] DMCode = new byte[RBuffLen];
-                Array.Copy(SPReadBuff, DMCode, RBuffLen);
-                string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
-                Thread.Sleep(1000);
-                SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
-
-                Logger.Info(DMStr + "->" + DateTime.Now);
-
-                if (DMStr == DataMatrixStr)
+                try
                 {
-                    plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
-                    reSetPram();
+                    //扫描二维码 比对是否与打印一致
+                    if (con_scanner())
+                    {
+                        //byte[] SPSendBuff = new byte[100];
+                        byte[] SPReadBuff = new byte[100];
+                        SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
+                        Thread.Sleep(100);
+                        int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
+                        byte[] DMCode = new byte[RBuffLen];
+                        Array.Copy(SPReadBuff, DMCode, RBuffLen);
+                        string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
+                        Thread.Sleep(100);
+                        SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
+
+                        Logger.Info(DMStr + "->" + DateTime.Now);
+
+                        if (DMStr == DataMatrixStr && DataMatrixStr != "")
+                        {
+                            plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
+                            reSetPram();
+                        }
+                        if (DMStr == "")
+                            plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 171 });
+                    }
+
+                    Logger.Info("step6");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "条码扫描异常");
+                    plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 170 });
                 }
             }
-
-            Logger.Info("step6");
+            lastFlag6 = flag;
         }
         /// <summary>
         /// 3-数据解绑
         /// </summary>
-        void step3(/*ref int stepNum, string packSN*/)
+        void step3(bool flag)
         {
-            //调用接口 数据解绑  ->等站完成统一解绑
-            //PostDataAPI postDataAPI = new PostDataAPI();
+            if (lastFlag3 == flag)
+                return;
 
-            //string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
-            //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+            if (!flag)
+                plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x00 });
+            else
+            {
+                //调用接口 数据解绑  ->等站完成统一解绑
+                //PostDataAPI postDataAPI = new PostDataAPI();
 
-            //JObject send = new JObject();
-            //send.Add("AGVSN", getjson["AGVID"].ToString());
-            //send.Add("PackSN", packSN);
-            //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                //string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
+                //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
-            packSNArr = packSN.Split('_');//用于打印的电池包编号
+                //JObject send = new JObject();
+                //send.Add("AGVSN", getjson["AGVID"].ToString());
+                //send.Add("PackSN", packSN);
+                //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
 
-            if (plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
-                stepNum++;
+                packSNArr = packSN.Split('_');//用于打印的电池包编号
 
-            Logger.Info("step3");
+                plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x01 });
+
+                Logger.Info("step3");
+
+                step4T();//发送站完成信号
+            }
+            lastFlag3 = flag;
         }
         /// <summary>
-        /// 4-站完成
+        /// 4-站完成置1
         /// </summary>
-        void step4(/*ref int stepNum, JObject json*/)
+        void step4T()
         {
             if (json2["Pack1SN"].ToString() == "" && json2["Pack2SN"].ToString() == "")
             {
@@ -323,16 +419,22 @@ namespace IDCodePrinter
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
             }
-            stepNum++;
 
-            Logger.Info("step4");
+            Logger.Info("step4T");
         }
-        //void step7(/*ref int stepNum*/)
-        //{
-        //    //开班信号 从我们服务器获取
-        //    if (plc.WriteBytes(DataType.DataBlock, 160, 112, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
-        //        stepNum++;
-        //}
+        /// <summary>
+        /// 4-站完成置0
+        /// </summary>
+        void step4F(bool flag)
+        {
+            if (flag && lastFlag4 != flag)
+            {
+                plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x00 });
+                Logger.Info("step4F");
+            }
+
+            lastFlag4 = flag;
+        }
 
         public static Bitmap Encode_DM(string content, int moduleSize = 5, int margin = 5)
         {
@@ -481,6 +583,12 @@ namespace IDCodePrinter
                 Invoke(new printTagDelegate(printTag), new object[] { packSN });
             else
             {
+                Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                s.Connect(ConfigurationManager.AppSettings["PrinterIP"].ToString(), 9100);
+                s.Send(ASCIIEncoding.ASCII.GetBytes("~JAOA"));//清空打印机队列
+                s.Close();
+
+                label7.Text = packSN;
                 //NewDBLib dblib = new NewDBLib();
                 //DataTable dt;
                 DateTime datetime = DateTime.Now;
