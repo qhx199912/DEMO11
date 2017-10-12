@@ -69,7 +69,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(69, 21);
             this.textBox2.TabIndex = 5;
-            this.textBox2.Text = "SVWAP00001";
+            this.textBox2.Text = "SVWAP0001";
             // 
             // label2
             // 
@@ -123,7 +123,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(52, 21);
             this.textBox3.TabIndex = 17;
-            this.textBox3.Text = "H05";
+            this.textBox3.Text = "M02";
             // 
             // label4
             // 
@@ -140,7 +140,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(241, 21);
             this.textBox4.TabIndex = 19;
-            this.textBox4.Text = "5KE915588F____#037______#653709246#288";
+            this.textBox4.Text = "5KE915588F____#037______#653709246#";
             // 
             // label5
             // 

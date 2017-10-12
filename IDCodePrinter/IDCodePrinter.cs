@@ -463,7 +463,7 @@ namespace IDCodePrinter
         {
             Code39Writer ean8w = new Code39Writer();
             
-            ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.CODE_39, 500, 38);
+            ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.CODE_39, 300, 38);
             Bitmap bitmap = ByteMatrixToBitmap(byteMatrix);
 
             return bitmap;
@@ -595,11 +595,18 @@ namespace IDCodePrinter
                 LocalReport report = new LocalReport();
                 report.ReportPath = @".\Report\Report1.rdlc";
 
-                Image img = Encode_Code_39(textBox1.Text + textBox3.Text);//Encode_EAN_8(packType);
+                string BType = "--";
+                string sn = "-------";
+                if (packSN.Length == 9)
+                {
+                    BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
+                    sn = "0000" + packSN.Substring(6, 3);
+                }
+                Image img = Encode_Code_39("SVWPE" + BType + "A" + CreateFeld6E16(datetime, sn));
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                DataMatrixStr = textBox4.Text + packSN + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#";
+                DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "#288" + packSN + "___*=";
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
@@ -607,7 +614,7 @@ namespace IDCodePrinter
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", packSN);
@@ -710,18 +717,25 @@ namespace IDCodePrinter
                 //reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
                 reportViewer1.LocalReport.ReportPath = @".\Report\Report1.rdlc";
 
-                Image img = Encode_Code_39(textBox1.Text + textBox3.Text); //Encode_EAN_8(textBox2.Text);
+                string BType = "--";
+                string sn = "-------";
+                if (textBox2.Text.Length == 9)
+                {
+                    BType = textBox2.Text.Substring(4, 1) == "P" ? "A1" : "E1";
+                    sn = "0000" + textBox2.Text.Substring(6, 3);
+                }
+                Image img = Encode_Code_39("SVWPE" + BType + "A" + CreateFeld6E16(datetime, sn));
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                Image img2 = Encode_DM(textBox4.Text + textBox2.Text + "_______#___#" + datetime.ToString("ddMMyyyyHHmmss") + "#", 5, 10);
+                Image img2 = Encode_DM(textBox4.Text + datetime.ToString("ddMMyy") + "#288" + textBox2.Text + "___*=", 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", textBox2.Text);
@@ -734,6 +748,33 @@ namespace IDCodePrinter
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        string CreateFeld6E16(DateTime dt, string sn)
+        {
+            int y = (dt.Year - 2010) % 30;
+            int m = dt.Month;
+            int d = dt.Day;
+            string DtCode = "000";
+
+            if (y <= 9)
+                DtCode = y.ToString();
+            else
+                DtCode = ((char)(y + 55)).ToString();
+
+            if (m <= 9)
+                DtCode += m.ToString();
+            else
+                DtCode += ((char)(m + 55)).ToString();
+
+            if (d <= 9)
+                DtCode += d.ToString();
+            else if (d == 31)
+                DtCode += "0";
+            else
+                DtCode += ((char)(d + 55)).ToString();
+
+            return DtCode + sn.Substring(4, 3) + DtCode + sn;
         }
     }
 }
