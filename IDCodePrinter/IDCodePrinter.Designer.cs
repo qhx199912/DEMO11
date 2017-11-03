@@ -108,7 +108,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(32, 21);
             this.textBox1.TabIndex = 15;
-            this.textBox1.Text = "0200";
+            this.textBox1.Text = "A210";
             // 
             // label3
             // 

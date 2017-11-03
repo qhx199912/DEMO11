@@ -295,8 +295,8 @@ namespace IDCodePrinter
                             string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN +"\" }");
                             Logger.Info("step5->" + getStr);
                             JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                            BMC_Rev = tdv["VersionData"]["BMC_Rev"].ToString();
-                            BMC_HW_Rev = tdv["VersionData"]["BMC_HW_Rev"].ToString();
+                            BMC_Rev = tdv["VersionData"]["SW_BMC"]["Value"].ToString();
+                            BMC_HW_Rev = tdv["VersionData"]["HW_BMC"]["Value"].ToString();
                         }
                         catch (Exception ex)
                         {
