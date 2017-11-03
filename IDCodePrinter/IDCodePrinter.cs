@@ -30,7 +30,7 @@ using System.Net.Sockets;
 
 namespace IDCodePrinter
 {
-    delegate void printTagDelegate(string packSN);
+    delegate void printTagDelegate(string packSN, string BMC_Rev, string BMC_HW_Rev);
     delegate bool PLCConnDelegate();
     public partial class IDCodePrinter : Form
     {
@@ -285,9 +285,33 @@ namespace IDCodePrinter
 
                 if (printPackSN != "")
                 {
+                    string BMC_Rev = "200";
+                    string BMC_HW_Rev = "M02";
                     try
                     {
-                        printTag(printPackSN);
+                        try
+                        {
+                            PostDataAPI postDataAPI = new PostDataAPI();
+                            string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN +"\" }");
+                            Logger.Info("step5->" + getStr);
+                            JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                            BMC_Rev = tdv["VersionData"]["BMC_Rev"].ToString();
+                            BMC_HW_Rev = tdv["VersionData"]["BMC_HW_Rev"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "step5 从服务器查询软硬件版本异常");
+                            plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "软硬件版本获取异常");
+                    }
+
+                    try
+                    {
+                        printTag(printPackSN, "0" + BMC_Rev, BMC_HW_Rev);
                     }
                     catch (Exception ex)
                     {
@@ -319,29 +343,33 @@ namespace IDCodePrinter
             {
                 try
                 {
-                    //扫描二维码 比对是否与打印一致
-                    if (con_scanner())
+                    for(int i = 0; i < 3; i++)
                     {
-                        //byte[] SPSendBuff = new byte[100];
-                        byte[] SPReadBuff = new byte[100];
-                        SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
-                        Thread.Sleep(100);
-                        int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
-                        byte[] DMCode = new byte[RBuffLen];
-                        Array.Copy(SPReadBuff, DMCode, RBuffLen);
-                        string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
-                        Thread.Sleep(100);
-                        SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
-
-                        Logger.Info(DMStr + "->" + DateTime.Now);
-
-                        if (DMStr == DataMatrixStr && DataMatrixStr != "")
+                        //扫描二维码 比对是否与打印一致
+                        if (con_scanner())
                         {
-                            plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
-                            reSetPram();
+                            //byte[] SPSendBuff = new byte[100];
+                            byte[] SPReadBuff = new byte[100];
+                            SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
+                            Thread.Sleep(1000);
+                            int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
+                            byte[] DMCode = new byte[RBuffLen];
+                            Array.Copy(SPReadBuff, DMCode, RBuffLen);
+                            string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
+                            //Thread.Sleep(100);
+                            SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
+
+                            Logger.Info(DMStr + "->" + DateTime.Now);
+
+                            if (DMStr == DataMatrixStr && DataMatrixStr != "")
+                            {
+                                plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
+                                reSetPram();
+                                break;
+                            }
+                            if (DMStr == "")
+                                plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 171 });
                         }
-                        if (DMStr == "")
-                            plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 171 });
                     }
 
                     Logger.Info("step6");
@@ -573,14 +601,20 @@ namespace IDCodePrinter
             ////doc.PDFStandard.SaveToXPS("output.xps");
             ////doc.PageScaling = PdfPrintPageScaling.ActualSize;
             //doc.PrintDocument.Print();
-
-            printTag(textBox2.Text);
+            try
+            {
+                printTag(textBox2.Text, "0" + textBox1.Text, textBox3.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
-        void printTag(string packSN)
+        void printTag(string packSN, string BMC_Rev, string BMC_HW_Rev)
         {
             if (InvokeRequired)
-                Invoke(new printTagDelegate(printTag), new object[] { packSN });
+                Invoke(new printTagDelegate(printTag), new object[] { packSN, BMC_Rev, BMC_HW_Rev });
             else
             {
                 Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -606,7 +640,7 @@ namespace IDCodePrinter
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "#288" + packSN + "___*=";
+                DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288" + packSN + "___*=";
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
@@ -728,7 +762,7 @@ namespace IDCodePrinter
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                Image img2 = Encode_DM(textBox4.Text + datetime.ToString("ddMMyy") + "#288" + textBox2.Text + "___*=", 5, 10);
+                Image img2 = Encode_DM(textBox4.Text + datetime.ToString("ddMMyy") + "*288" + textBox2.Text + "___*=", 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
@@ -775,6 +809,47 @@ namespace IDCodePrinter
                 DtCode += ((char)(d + 55)).ToString();
 
             return DtCode + sn.Substring(4, 3) + DtCode + sn;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //扫描二维码 比对是否与打印一致
+                if (con_scanner())
+                {
+                    label8.Text = "-";
+                    Application.DoEvents();
+                    //byte[] SPSendBuff = new byte[100];
+                    byte[] SPReadBuff = new byte[100];
+                    SPort.Write(new byte[] { 0x2B, 0x0D }, 0, 2);
+                    Thread.Sleep(1000);
+                    int RBuffLen = SPort.Read(SPReadBuff, 0, SPort.BytesToRead);
+                    byte[] DMCode = new byte[RBuffLen];
+                    Array.Copy(SPReadBuff, DMCode, RBuffLen);
+                    string DMStr = ASCIIEncoding.ASCII.GetString(DMCode).Trim();
+                    label8.Text = DMStr;
+                    //Thread.Sleep(1000);
+                    SPort.Write(new byte[] { 0x2C, 0x0D }, 0, 2);
+
+                    Logger.Info("手动扫码->" + DMStr + "->" + DateTime.Now);
+
+                    //if (DMStr == DataMatrixStr && DataMatrixStr != "")
+                    //{
+                        //plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
+                        //reSetPram();
+                    //}
+                    //if (DMStr == "")
+                        //plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 171 });
+                }
+
+                Logger.Info("step6");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "条码扫描异常");
+                //plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 170 });
+            }
         }
     }
 }
