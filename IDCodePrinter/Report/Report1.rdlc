@@ -284,19 +284,19 @@
             <TextRuns>
               <TextRun>
                 <Value>=Parameters!ReportParameter7.Value</Value>
-                <Style>
-                  <FontSize>13pt</FontSize>
-                </Style>
+                <Style />
               </TextRun>
             </TextRuns>
-            <Style />
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>7.66737cm</Top>
         <Left>3.23358cm</Left>
         <Height>0.70583cm</Height>
-        <Width>3.21167cm</Width>
+        <Width>3.36032cm</Width>
         <ZIndex>9</ZIndex>
         <Style>
           <Border>
@@ -372,7 +372,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Li-ion Bettery Prism</Value>
+                <Value>Li-ion Battery Prism</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -601,7 +601,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>  131kg</Value>
+                <Value>  125kg</Value>
                 <Style />
               </TextRun>
             </TextRuns>

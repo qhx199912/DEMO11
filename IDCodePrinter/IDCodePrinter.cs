@@ -636,11 +636,21 @@ namespace IDCodePrinter
                     BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
                     sn = "0000" + packSN.Substring(6, 3);
                 }
-                Image img = Encode_Code_39("SVWPE" + BType + "A" + CreateFeld6E16(datetime, sn));
+                string Feld6E16 = CreateFeld6E16(datetime, sn);
+                Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288" + packSN + "___*=";
+                if (packSN.Substring(4, 1) == "P")
+                    DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288 AP" +
+                        datetime.ToString("yy") + Feld6E16.Substring(1, 2) + packSN.Substring(5, 4);
+                else
+                    DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
+                         datetime.ToString("yy") + Feld6E16.Substring(1, 2) + packSN.Substring(5, 4);
+
+                DataMatrixStr = DMStrCheck(DataMatrixStr.ToUpper());
+                string plainCode = DataMatrixStr.Split('*')[1];
+
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
@@ -651,7 +661,7 @@ namespace IDCodePrinter
                 ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
-                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", packSN);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
 
@@ -758,11 +768,22 @@ namespace IDCodePrinter
                     BType = textBox2.Text.Substring(4, 1) == "P" ? "A1" : "E1";
                     sn = "0000" + textBox2.Text.Substring(6, 3);
                 }
-                Image img = Encode_Code_39("SVWPE" + BType + "A" + CreateFeld6E16(datetime, sn));
+                string Feld6E16 = CreateFeld6E16(datetime, sn);
+                Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                Image img2 = Encode_DM(textBox4.Text + datetime.ToString("ddMMyy") + "*288" + textBox2.Text + "___*=", 5, 10);
+                if (textBox2.Text.Substring(4, 1) == "P")
+                    DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288 AP" +
+                        datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
+                else
+                    DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
+                         datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
+
+                DataMatrixStr = DMStrCheck(DataMatrixStr.ToUpper());
+                string plainCode = DataMatrixStr.Split('*')[1];
+
+                Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
                 byte[] imgBytes2 = BitmapToBytes(imgBit2);
 
@@ -772,7 +793,7 @@ namespace IDCodePrinter
                 ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
-                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", textBox2.Text);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
 
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
@@ -809,6 +830,53 @@ namespace IDCodePrinter
                 DtCode += ((char)(d + 55)).ToString();
 
             return DtCode + sn.Substring(4, 3) + DtCode + sn;
+        }
+
+        string DMStrCheck(string dmstr)
+        {
+            int sum = 0;
+            byte[] dmStrArr = ASCIIEncoding.ASCII.GetBytes(dmstr);
+            for(int i = 0; i < dmStrArr.Length; i++)
+            {
+                if (dmStrArr[i] >= 0x41 && dmStrArr[i] <= 0x5A)
+                    dmStrArr[i] -= 55;
+                sum += dmStrArr[i];
+            }
+            sum %= 43;
+
+            if (sum > 9 && sum <= 35)
+                sum += 55;
+            else if (sum > 35)
+            {
+                switch(sum)
+                {
+                    case 36:
+                        sum = '-';
+                        break;
+                    case 37:
+                        sum = '.';
+                        break;
+                    case 38:
+                        sum = ' ';
+                        break;
+                    case 39:
+                        sum = '$';
+                        break;
+                    case 40:
+                        sum = '/';
+                        break;
+                    case 41:
+                        sum = '+';
+                        break;
+                    case 42:
+                        sum = '%';
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            return dmstr + ASCIIEncoding.ASCII.GetString(new byte[] { (byte)sum }) + "*=";
         }
 
         private void button3_Click(object sender, EventArgs e)

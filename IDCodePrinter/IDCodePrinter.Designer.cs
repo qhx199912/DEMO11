@@ -44,12 +44,14 @@
             this.label7 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // reportViewer1
             // 
             this.reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
-            this.reportViewer1.Location = new System.Drawing.Point(14, 77);
+            this.reportViewer1.Location = new System.Drawing.Point(14, 96);
             this.reportViewer1.Name = "reportViewer1";
             this.reportViewer1.Size = new System.Drawing.Size(423, 406);
             this.reportViewer1.TabIndex = 2;
@@ -57,7 +59,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(453, 77);
+            this.button1.Location = new System.Drawing.Point(453, 96);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 74);
             this.button1.TabIndex = 3;
@@ -67,7 +69,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(59, 50);
+            this.textBox2.Location = new System.Drawing.Point(59, 69);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(69, 21);
             this.textBox2.TabIndex = 5;
@@ -76,7 +78,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 53);
+            this.label2.Location = new System.Drawing.Point(12, 72);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 12);
             this.label2.TabIndex = 8;
@@ -85,7 +87,7 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("宋体", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button2.Location = new System.Drawing.Point(453, 169);
+            this.button2.Location = new System.Drawing.Point(453, 188);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 74);
             this.button2.TabIndex = 14;
@@ -96,7 +98,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(134, 53);
+            this.label1.Location = new System.Drawing.Point(134, 72);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 16;
@@ -104,7 +106,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(193, 50);
+            this.textBox1.Location = new System.Drawing.Point(193, 69);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(32, 21);
             this.textBox1.TabIndex = 15;
@@ -113,7 +115,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(231, 53);
+            this.label3.Location = new System.Drawing.Point(231, 72);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
             this.label3.TabIndex = 18;
@@ -121,7 +123,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(290, 50);
+            this.textBox3.Location = new System.Drawing.Point(290, 69);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(52, 21);
             this.textBox3.TabIndex = 17;
@@ -130,24 +132,24 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 26);
+            this.label4.Location = new System.Drawing.Point(12, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 12);
+            this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 20;
-            this.label4.Text = "二维码/条形码";
+            this.label4.Text = "二维码P";
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(101, 23);
+            this.textBox4.Location = new System.Drawing.Point(65, 5);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(241, 21);
             this.textBox4.TabIndex = 19;
-            this.textBox4.Text = "#5KE915588_____#037______#653709246#";
+            this.textBox4.Text = "#5KE915588     #037      #653709246#";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(451, 284);
+            this.label5.Location = new System.Drawing.Point(451, 303);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 12);
             this.label5.TabIndex = 21;
@@ -156,7 +158,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(451, 308);
+            this.label6.Location = new System.Drawing.Point(451, 327);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(11, 12);
             this.label6.TabIndex = 22;
@@ -165,7 +167,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(451, 333);
+            this.label7.Location = new System.Drawing.Point(451, 352);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(11, 12);
             this.label7.TabIndex = 24;
@@ -191,11 +193,30 @@
             this.label8.TabIndex = 26;
             this.label8.Text = "-";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(12, 35);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 12);
+            this.label9.TabIndex = 28;
+            this.label9.Text = "二维码B";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(65, 32);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(299, 21);
+            this.textBox5.TabIndex = 27;
+            this.textBox5.Text = "#5KE915919AA   #053      #653709246#";
+            // 
             // IDCodePrinter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(551, 591);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.textBox5);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.label7);
@@ -240,6 +261,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox textBox5;
     }
 }
 
