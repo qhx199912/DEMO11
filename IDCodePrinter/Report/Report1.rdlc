@@ -256,7 +256,9 @@
                 </Style>
               </TextRun>
             </TextRuns>
-            <Style />
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
@@ -270,6 +272,7 @@
             <Style>Solid</Style>
             <Width>1.5pt</Width>
           </Border>
+          <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -303,6 +306,7 @@
             <Style>Solid</Style>
             <Width>1.5pt</Width>
           </Border>
+          <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -667,7 +671,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>37Ah</Value>
+                <Value>=Parameters!ReportParameter8.Value + "Ah"</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -777,6 +781,10 @@
       <Nullable>true</Nullable>
       <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter7</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter8">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter8</Prompt>
     </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>

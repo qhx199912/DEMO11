@@ -662,8 +662,9 @@ namespace IDCodePrinter
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1, 2));
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8 });
 
                 report.Refresh();
 
@@ -772,7 +773,6 @@ namespace IDCodePrinter
                 Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
-
                 if (textBox2.Text.Substring(4, 1) == "P")
                     DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288 AP" +
                         datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
@@ -794,9 +794,10 @@ namespace IDCodePrinter
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1,2));
 
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
