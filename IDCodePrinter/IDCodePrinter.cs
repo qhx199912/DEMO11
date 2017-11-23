@@ -648,7 +648,7 @@ namespace IDCodePrinter
                     DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
                          datetime.ToString("yy") + Feld6E16.Substring(1, 2) + packSN.Substring(5, 4);
 
-                DataMatrixStr = DMStrCheck(DataMatrixStr.ToUpper());
+                DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
 
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
@@ -780,7 +780,7 @@ namespace IDCodePrinter
                     DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
                          datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
 
-                DataMatrixStr = DMStrCheck(DataMatrixStr.ToUpper());
+                DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
 
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
@@ -836,15 +836,36 @@ namespace IDCodePrinter
         {
             int sum = 0;
             byte[] dmStrArr = ASCIIEncoding.ASCII.GetBytes(dmstr);
-            for(int i = 0; i < dmStrArr.Length; i++)
+            for (int i = 0; i < dmStrArr.Length; i++)
             {
-                if (dmStrArr[i] >= 0x41 && dmStrArr[i] <= 0x5A)
+                if (dmStrArr[i] >= 0x30 && dmStrArr[i] <= 0x39)
+                    dmStrArr[i] -= 48;
+                else if (dmStrArr[i] >= 0x41 && dmStrArr[i] <= 0x5A)
                     dmStrArr[i] -= 55;
+                else if (dmStrArr[i] == '-')
+                    dmStrArr[i] = 36;
+                else if (dmStrArr[i] == '.')
+                    dmStrArr[i] = 37;
+                else if (dmStrArr[i] == 0x20)
+                    dmStrArr[i] = 38;
+                else if (dmStrArr[i] == '$')
+                    dmStrArr[i] = 39;
+                else if (dmStrArr[i] == '/')
+                    dmStrArr[i] = 40;
+                else if (dmStrArr[i] == '+')
+                    dmStrArr[i] = 41;
+                else if (dmStrArr[i] == '%')
+                    dmStrArr[i] = 42;
+                else
+                    continue;
+
                 sum += dmStrArr[i];
             }
             sum %= 43;
 
-            if (sum > 9 && sum <= 35)
+            if (sum >= 0 && sum <= 9)
+                sum += 48;
+            else if (sum > 9 && sum <= 35)
                 sum += 55;
             else if (sum > 35)
             {
@@ -857,7 +878,7 @@ namespace IDCodePrinter
                         sum = '.';
                         break;
                     case 38:
-                        sum = ' ';
+                        sum = 0x20;
                         break;
                     case 39:
                         sum = '$';
@@ -876,7 +897,7 @@ namespace IDCodePrinter
                 }
             }
             
-            return dmstr + ASCIIEncoding.ASCII.GetString(new byte[] { (byte)sum }) + "*=";
+            return ASCIIEncoding.ASCII.GetString(new byte[] { (byte)sum }) + "*=";
         }
 
         private void button3_Click(object sender, EventArgs e)
