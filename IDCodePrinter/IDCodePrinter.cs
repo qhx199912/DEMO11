@@ -42,6 +42,9 @@ namespace IDCodePrinter
             InitializeComponent();
             Logger.Info("IDCodePrinter Start" + Application.ProductVersion);
 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.SelectedIndex = 0;
+
             Init();
 
             //NewDBLib dblib = new NewDBLib();
@@ -611,6 +614,7 @@ namespace IDCodePrinter
             }
         }
 
+        const string DMCodeFormat = "#{0}#{1}      #653709246#{2}*288 5UY{3}";
         void printTag(string packSN, string BMC_Rev, string BMC_HW_Rev)
         {
             if (InvokeRequired)
@@ -641,12 +645,20 @@ namespace IDCodePrinter
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
-                if (packSN.Substring(4, 1) == "P")
-                    DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288 AP" +
-                        datetime.ToString("yy") + Feld6E16.Substring(1, 2) + packSN.Substring(5, 4);
+                if (comboBox1.SelectedIndex < 4)
+                {
+                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915588     ",
+                        "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                        (char)(comboBox1.SelectedIndex + 0x41) +
+                        int.Parse(packSN.Substring(6, 3)).ToString("X3"));
+                }
                 else
-                    DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
-                         datetime.ToString("yy") + Feld6E16.Substring(1, 2) + packSN.Substring(5, 4);
+                {
+                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915919AA   ",
+                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                           (char)(comboBox1.SelectedIndex + 0x41) +
+                           int.Parse(packSN.Substring(6, 3)).ToString("X3"));
+                }
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
@@ -658,13 +670,14 @@ namespace IDCodePrinter
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1, 2));
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8, ReportParam9 });
 
                 report.Refresh();
 
@@ -773,12 +786,20 @@ namespace IDCodePrinter
                 Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
-                if (textBox2.Text.Substring(4, 1) == "P")
-                    DataMatrixStr = textBox4.Text + datetime.ToString("ddMMyy") + "*288 AP" +
-                        datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
+                if (comboBox1.SelectedIndex < 4)
+                {
+                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915588     ",
+                        "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                        (char)(comboBox1.SelectedIndex + 0x41) +
+                        int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
+                }
                 else
-                    DataMatrixStr = textBox5.Text + datetime.ToString("ddMMyy") + "*288 AB" +
-                         datetime.ToString("yy") + Feld6E16.Substring(1, 2) + textBox2.Text.Substring(5, 4);
+                {
+                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915919AA   ",
+                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                           (char)(comboBox1.SelectedIndex + 0x41) +
+                           int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
+                }
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
@@ -790,14 +811,15 @@ namespace IDCodePrinter
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1,2));
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
 
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8, ReportParam9 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
