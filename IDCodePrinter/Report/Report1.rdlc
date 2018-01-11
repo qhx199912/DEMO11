@@ -56,9 +56,9 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>5KE.915.588</Value>
+                <Value>=Parameters!ReportParameter10.Value</Value>
                 <Style>
-                  <FontSize>18pt</FontSize>
+                  <FontSize>16pt</FontSize>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -69,9 +69,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>0.55245cm</Top>
-        <Left>3.11459cm</Left>
+        <Left>2.8521cm</Left>
         <Height>0.81167cm</Height>
-        <Width>3.90229cm</Width>
+        <Width>4.16478cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -746,6 +746,10 @@
     <ReportParameter Name="ReportParameter9">
       <DataType>String</DataType>
       <Prompt>ReportParameter9</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter10">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter10</Prompt>
     </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>

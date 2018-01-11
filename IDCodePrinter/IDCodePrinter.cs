@@ -645,16 +645,22 @@ namespace IDCodePrinter
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
+                string Feld2 = "5KE.915.588";
+                if (comboBox1.SelectedIndex == 2)
+                    Feld2 = "5KE.915.588.A";
+                else if (comboBox1.SelectedIndex >= 4)
+                    Feld2 = "5KE.915.919.AA";
+
                 if (comboBox1.SelectedIndex < 4)
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915588     ",
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                         (char)(comboBox1.SelectedIndex + 0x41) +
                         int.Parse(packSN.Substring(6, 3)).ToString("X3"));
                 }
                 else
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915919AA   ",
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
                            comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                            (char)(comboBox1.SelectedIndex + 0x41) +
                            int.Parse(packSN.Substring(6, 3)).ToString("X3"));
@@ -676,8 +682,10 @@ namespace IDCodePrinter
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1, 2));
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
+                ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8, ReportParam9 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
+                    ReportParam9, ReportParam10 });
 
                 report.Refresh();
 
@@ -786,16 +794,23 @@ namespace IDCodePrinter
                 Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
+
+                string Feld2 = "5KE.915.588";//14
+                if (comboBox1.SelectedIndex == 2)
+                    Feld2 = "5KE.915.588.A";
+                else if (comboBox1.SelectedIndex >= 4)
+                    Feld2 = "5KE.915.919.AA";
+
                 if (comboBox1.SelectedIndex < 4)
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915588     ",
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".","").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                         (char)(comboBox1.SelectedIndex + 0x41) +
                         int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
                 }
                 else
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, "5KE915919AA   ",
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
                            comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                            (char)(comboBox1.SelectedIndex + 0x41) +
                            int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
@@ -817,9 +832,10 @@ namespace IDCodePrinter
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1,2));
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
-
+                ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
-                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8, ReportParam9 });
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
+                    ReportParam9, ReportParam10 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
