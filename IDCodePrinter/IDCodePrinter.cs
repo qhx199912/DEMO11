@@ -637,11 +637,17 @@ namespace IDCodePrinter
                 string sn = "-------";
                 if (packSN.Length == 9)
                 {
-                    BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
+                    //BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
+                    if (comboBox1.SelectedIndex == 4)
+                        BType = "B1";
+                    else if (comboBox1.SelectedIndex == 5)
+                        BType = "C1";
+                    else
+                        BType = "A1";
                     sn = "0000" + packSN.Substring(6, 3);
                 }
                 string Feld6E16 = CreateFeld6E16(datetime, sn);
-                Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
+                Image img = Encode_Code_39("SVWPE" + BType + (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
@@ -681,7 +687,8 @@ namespace IDCodePrinter
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1, 2));
-                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + 
+                    (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
                 ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
@@ -787,11 +794,17 @@ namespace IDCodePrinter
                 string sn = "-------";
                 if (textBox2.Text.Length == 9)
                 {
-                    BType = textBox2.Text.Substring(4, 1) == "P" ? "A1" : "E1";
+                    //BType = textBox2.Text.Substring(4, 1) == "P" ? "A1" : "E1";
+                    if (comboBox1.SelectedIndex == 4)
+                        BType = "B1";
+                    else if (comboBox1.SelectedIndex == 5)
+                        BType = "C1";
+                    else
+                        BType = "A1";
                     sn = "0000" + textBox2.Text.Substring(6, 3);
                 }
                 string Feld6E16 = CreateFeld6E16(datetime, sn);
-                Image img = Encode_Code_39("SVWPE" + BType + "A" + Feld6E16);
+                Image img = Encode_Code_39("SVWPE" + BType + (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
@@ -831,7 +844,8 @@ namespace IDCodePrinter
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", DataMatrixStr.Split('#')[2].Substring(1,2));
-                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + "A" + Feld6E16);
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType +
+                    (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
                 ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
@@ -868,7 +882,7 @@ namespace IDCodePrinter
             else
                 DtCode += ((char)(d + 55)).ToString();
 
-            return DtCode + sn.Substring(4, 3) + DtCode + sn;
+            return DtCode + int.Parse(sn.Substring(4, 3)).ToString("X3") + DtCode + sn;
         }
 
         string DMStrCheck(string dmstr)
