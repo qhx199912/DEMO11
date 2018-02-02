@@ -979,5 +979,27 @@ namespace IDCodePrinter
                 //plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 170 });
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PostDataAPI postDataAPI = new PostDataAPI();
+                postDataAPI = new PostDataAPI();
+                JObject send = new JObject();
+                send.Add("StationID", "A490");
+                send.Add("Pack1SN", "");
+                send.Add("Pack1Status", "");
+                send.Add("Pack2SN", "");
+                send.Add("Pack2Status", "");
+                send.Add("IsReturnRepair", false);
+                send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex, "站完成按钮");
+            }
+        }
     }
 }
