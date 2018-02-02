@@ -58,7 +58,7 @@
               <TextRun>
                 <Value>=Parameters!ReportParameter10.Value</Value>
                 <Style>
-                  <FontSize>16pt</FontSize>
+                  <FontSize>15pt</FontSize>
                 </Style>
               </TextRun>
             </TextRuns>
@@ -316,7 +316,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>7.66737cm</Top>
-        <Left>3.23358cm</Left>
+        <Left>2.97909cm</Left>
         <Height>0.70583cm</Height>
         <Width>3.36032cm</Width>
         <ZIndex>10</ZIndex>
@@ -338,8 +338,10 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>IP6K6,IP6K7</Value>
-                <Style />
+                <Value>IP6K6K,IP6K7K</Value>
+                <Style>
+                  <FontSize>9pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
@@ -348,7 +350,9 @@
             <TextRuns>
               <TextRun>
                 <Value>IP6K9K</Value>
-                <Style />
+                <Style>
+                  <FontSize>9pt</FontSize>
+                </Style>
               </TextRun>
             </TextRuns>
             <Style />
@@ -356,9 +360,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
         <Top>7.48188cm</Top>
-        <Left>6.73501cm</Left>
+        <Left>6.5158cm</Left>
         <Height>1cm</Height>
-        <Width>2.34971cm</Width>
+        <Width>2.56892cm</Width>
         <ZIndex>11</ZIndex>
         <Style>
           <Border>
@@ -458,7 +462,7 @@
         <Top>5.51704cm</Top>
         <Left>2.8521cm</Left>
         <Height>0.4cm</Height>
-        <Width>3.2832cm</Width>
+        <Width>3.45959cm</Width>
         <ZIndex>15</ZIndex>
         <Style>
           <Border>
@@ -555,7 +559,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>BATTYPV15</Value>
+                <Value>=Parameters!ReportParameter11.Value</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -582,7 +586,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>  125kg</Value>
+                <Value>=Parameters!ReportParameter13.Value + "kg"</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -591,9 +595,9 @@
         </Paragraphs>
         <rd:DefaultName>Textbox25</rd:DefaultName>
         <Top>5.51704cm</Top>
-        <Left>6.13529cm</Left>
+        <Left>6.31169cm</Left>
         <Height>0.4cm</Height>
-        <Width>2.95292cm</Width>
+        <Width>2.77652cm</Width>
         <ZIndex>20</ZIndex>
         <Style>
           <Border>
@@ -663,7 +667,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>13,0kWh</Value>
+                <Value>=Parameters!ReportParameter12.Value + "kWh"</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -750,6 +754,18 @@
     <ReportParameter Name="ReportParameter10">
       <DataType>String</DataType>
       <Prompt>ReportParameter10</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter11">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter11</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter12">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter12</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter13">
+      <DataType>String</DataType>
+      <Prompt>ReportParameter13</Prompt>
     </ReportParameter>
   </ReportParameters>
   <EmbeddedImages>
