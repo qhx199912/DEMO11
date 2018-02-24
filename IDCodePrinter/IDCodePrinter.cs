@@ -37,6 +37,7 @@ namespace IDCodePrinter
         PLC plc = null;
         bool runFlag = false;
         SerialPort SPort = new SerialPort();
+        string printerName = "";
         public IDCodePrinter()
         {
             InitializeComponent();
@@ -68,6 +69,8 @@ namespace IDCodePrinter
                 }
                 else
                     Logger.Info("plc InitError>>" + plc.lastErrorCode.ToString());
+                /////////////////////////////////////////////////
+                printerName = ConfigurationManager.AppSettings["PrinterName"].ToString();
                 /////////////////////////////////////////////////
                 SPort.PortName = ConfigurationManager.AppSettings["ScannerPort"].ToString();
                 SPort.BaudRate = int.Parse(ConfigurationManager.AppSettings["ScannerBaudRate"].ToString());
@@ -748,6 +751,8 @@ namespace IDCodePrinter
                 doc.LoadFromFile(@"output.pdf");
                 //doc.PDFStandard.SaveToXPS("output.xps");
                 //doc.PageScaling = PdfPrintPageScaling.ActualSize;
+                if(printerName != "")
+                    doc.PrintDocument.PrinterSettings.PrinterName = printerName;
                 doc.PrintDocument.Print();
             }
         }
