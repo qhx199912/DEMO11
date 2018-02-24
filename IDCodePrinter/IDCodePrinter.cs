@@ -127,7 +127,7 @@ namespace IDCodePrinter
         byte type = 0;
         byte[] readBuff;
         string DataMatrixStr;
-        string[] packSNArr;//请勿清空
+        string packSNArr;//请勿清空
 
         bool lastFlag1 = false;
         bool lastFlag2 = false;
@@ -273,7 +273,7 @@ namespace IDCodePrinter
                 plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
             else
             {
-                string printPackSN = "";
+                string printPackSN = packSNArr;
 
                 bool isOK = false;
                 if (json["Pack1SN"].ToString() == packSN)
@@ -281,13 +281,13 @@ namespace IDCodePrinter
                 if (json["Pack2SN"].ToString() == packSN)
                     isOK = json["Pack2Status"].ToString() == "1" ? true : false;
 
-                if (packSNArr.Length == 2)
-                {
-                    if (packSNArr[0] == "PHEV")
-                        printPackSN = "SVWAP" + packSNArr[1];
-                    else if (packSNArr[0] == "BEV")
-                        printPackSN = "SVWAB" + packSNArr[1];
-                }
+                //if (packSNArr.Length == 2)
+                //{
+                //    if (packSNArr[0] == "PHEV")
+                //        printPackSN = "SVWAP" + packSNArr[1];
+                //    else if (packSNArr[0] == "BEV")
+                //        printPackSN = "SVWAB" + packSNArr[1];
+                //}
 
                 if (printPackSN != "")
                 {
@@ -317,7 +317,7 @@ namespace IDCodePrinter
 
                     try
                     {
-                        printTag(printPackSN, "0" + BMC_Rev, BMC_HW_Rev);
+                        printTagAuto(printPackSN, "0" + BMC_Rev, BMC_HW_Rev);
                     }
                     catch (Exception ex)
                     {
@@ -411,7 +411,7 @@ namespace IDCodePrinter
                 //send.Add("PackSN", packSN);
                 //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
 
-                packSNArr = packSN.Split('_');//用于打印的电池包编号
+                packSNArr = packSN;//用于打印的电池包编号
 
                 plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x01 });
 
@@ -618,6 +618,7 @@ namespace IDCodePrinter
         }
 
         const string DMCodeFormat = "#{0}#{1}      #653709246#{2}*288 5UY{3}";
+        const string DMCodeFormatAuto = "#{0}#{1}      #653709246#{2}*{3}*=";
         void printTag(string packSN, string BMC_Rev, string BMC_HW_Rev)
         {
             if (InvokeRequired)
@@ -757,6 +758,140 @@ namespace IDCodePrinter
             }
         }
 
+        void printTagAuto(string packSN, string BMC_Rev, string BMC_HW_Rev)
+        {
+            if (InvokeRequired)
+                Invoke(new printTagDelegate(printTag), new object[] { packSN, BMC_Rev, BMC_HW_Rev });
+            else
+            {
+                Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                s.Connect(ConfigurationManager.AppSettings["PrinterIP"].ToString(), 9100);
+                s.Send(ASCIIEncoding.ASCII.GetBytes("~JAOA"));//清空打印机队列
+                s.Close();
+
+                label7.Text = packSN;
+                //NewDBLib dblib = new NewDBLib();
+                //DataTable dt;
+                DateTime datetime = DateTime.Now;
+                LocalReport report = new LocalReport();
+                report.ReportPath = @".\Report\Report1.rdlc";
+
+                string BType = "--";
+                string sn = "-------";
+                if (packSN.Length == 15)
+                {
+                    //BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
+                    if (comboBox1.SelectedIndex == 4)
+                        BType = "B1";
+                    else if (comboBox1.SelectedIndex == 5)
+                        BType = "C1";
+                    else
+                        BType = "A1";
+                    sn = "0000" + packSN.Substring(11, 3);
+                }
+                string Feld6E16 = CreateFeld6E16(datetime, sn);
+                Image img = Encode_Code_39("SVWPE" + BType + (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
+                Bitmap imgBit = new Bitmap(img);
+                byte[] imgBytes = BitmapToBytes(imgBit);
+
+                string Feld2 = "5KE.915.588";
+                if (comboBox1.SelectedIndex == 2)
+                    Feld2 = "5KE.915.588.A";
+                else if (comboBox1.SelectedIndex >= 4)
+                    Feld2 = "5KE.915.919.AA";
+
+                string rp8 = "37";
+                string rp11 = "BATTYPV15";
+                string rp12 = "13,0";
+                string rp13 = "125";
+                if (comboBox1.SelectedIndex < 4)
+                {
+                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
+                        "037", datetime.ToString("ddMMyy"), packSN);
+                }
+                else
+                {
+                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
+                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), packSN);
+
+                    if (comboBox1.SelectedIndex == 4)
+                    {
+                        rp8 = "106";
+                        rp11 = "BATTYPV20";
+                        rp12 = "37,0";
+                        rp13 = "350";
+                    }
+                    else
+                    {
+                        rp8 = "120";
+                        rp11 = "BATTYPV20";
+                        rp12 = "37,0";
+                        rp13 = "350";
+                    }
+                }
+
+                //DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
+                string plainCode = DataMatrixStr.Split('*')[1];
+
+                Image img2 = Encode_DM(DataMatrixStr, 5, 10);
+                Bitmap imgBit2 = new Bitmap(img2);
+                byte[] imgBytes2 = BitmapToBytes(imgBit2);
+
+                ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
+                ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
+                ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
+                ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType +
+                    (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
+                ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
+                ReportParameter ReportParam11 = new ReportParameter("ReportParameter11", rp11);
+                ReportParameter ReportParam12 = new ReportParameter("ReportParameter12", rp12);
+                ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
+                report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
+                    ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
+                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13 });
+
+                report.Refresh();
+
+                string deviceInfo = "<DeviceInfo>" +
+                    "  <OutputFormat>EMF</OutputFormat>" +
+                    "  <PageWidth>9.5cm</PageWidth>" +
+                    "  <PageHeight>9.5cm</PageHeight>" +
+                    "  <MarginTop>0.1cm</MarginTop>" +
+                    "  <MarginLeft>0.1cm</MarginLeft>" +
+                    "  <MarginRight>0.1cm</MarginRight>" +
+                    "  <MarginBottom>0.1cm</MarginBottom>" +
+                    "</DeviceInfo>";
+                Warning[] warnings;
+                //report.Render("Image", deviceInfo, CreateStream, out warnings);//生成数据流
+                //Print();//执行打印
+
+                string[] streamids;
+                string mimeType;
+                string encoding;
+                string extension;
+
+                byte[] bytes = report.Render(
+                   "PDF", deviceInfo, out mimeType, out encoding, out extension,
+                   out streamids, out warnings);
+
+                FileStream fs = new FileStream(@"output.pdf", FileMode.Create);
+                fs.Write(bytes, 0, bytes.Length);
+                fs.Close();
+
+                PdfDocument doc = new PdfDocument();
+                doc.LoadFromFile(@"output.pdf");
+                //doc.PDFStandard.SaveToXPS("output.xps");
+                //doc.PageScaling = PdfPrintPageScaling.ActualSize;
+                if (printerName != "")
+                    doc.PrintDocument.PrinterSettings.PrinterName = printerName;
+                doc.PrintDocument.Print();
+            }
+        }
         //private List<Stream> m_streams;
         //private Stream CreateStream(string name, string fileNameExtension,
         //    Encoding encoding, string mimeType, bool willSeek)
