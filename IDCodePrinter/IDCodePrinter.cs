@@ -179,7 +179,7 @@ namespace IDCodePrinter
         {
             packSN = "";
             json = null;
-            json2 = null;
+            //json2 = null;
             type = 0;
             readBuff = null;
             DataMatrixStr = "";
@@ -1057,10 +1057,18 @@ namespace IDCodePrinter
             int d = dt.Day;
             string DtCode = "000";
 
-            if (y <= 9)
+            if (y == 0)
+                DtCode = "Y";
+            else if (y <= 9)
                 DtCode = y.ToString();
-            else
+            else if (y <= 22)
                 DtCode = ((char)(y + 55)).ToString();
+            else if (y == 23)
+                DtCode = ((char)(y + 57)).ToString();
+            else if (y <= 26)
+                DtCode = ((char)(y + 58)).ToString();
+            else
+                DtCode = ((char)(y + 59)).ToString();
 
             if (m <= 9)
                 DtCode += m.ToString();
@@ -1071,8 +1079,14 @@ namespace IDCodePrinter
                 DtCode += d.ToString();
             else if (d == 31)
                 DtCode += "0";
-            else
+            else if (d <= 22)
                 DtCode += ((char)(d + 55)).ToString();
+            else if (d == 23)
+                DtCode += ((char)(d + 57)).ToString();
+            else if (d <= 26)
+                DtCode += ((char)(d + 58)).ToString();
+            else
+                DtCode += ((char)(d + 59)).ToString();
 
             return DtCode + int.Parse(sn.Substring(4, 3)).ToString("X3") + DtCode + sn;
         }
