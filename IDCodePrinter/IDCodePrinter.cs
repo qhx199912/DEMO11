@@ -129,7 +129,7 @@ namespace IDCodePrinter
         string DataMatrixStr;
         string packSNArr;//请勿清空
 
-        bool lastFlag1 = false;
+        bool lastFlag1 = true;
         bool lastFlag2 = false;
         bool lastFlag3 = false;
         bool lastFlag4 = false;
@@ -295,24 +295,17 @@ namespace IDCodePrinter
                     string BMC_HW_Rev = "M02";
                     try
                     {
-                        try
-                        {
-                            PostDataAPI postDataAPI = new PostDataAPI();
-                            string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN +"\" }");
-                            Logger.Info("step5->" + getStr);
-                            JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                            BMC_Rev = tdv["VersionData"]["SW_BMC"]["Value"].ToString();
-                            BMC_HW_Rev = tdv["VersionData"]["HW_BMC"]["Value"].ToString();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex, "step5 从服务器查询软硬件版本异常");
-                            plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
-                        }
+                        PostDataAPI postDataAPI = new PostDataAPI();
+                        string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN + "\" }");
+                        Logger.Info("step5->" + getStr);
+                        JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        BMC_Rev = tdv["VersionData"]["SW_BMC"]["Value"].ToString();
+                        BMC_HW_Rev = tdv["VersionData"]["HW_BMC"]["Value"].ToString();
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error(ex, "软硬件版本获取异常");
+                        Logger.Error(ex, "step5 从服务器查询软硬件版本异常");
+                        plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
                     }
 
                     try
@@ -349,7 +342,7 @@ namespace IDCodePrinter
             {
                 try
                 {
-                    for(int i = 0; i < 3; i++)
+                    for(int i = 0; i < 10; i++)
                     {
                         //扫描二维码 比对是否与打印一致
                         if (con_scanner())
@@ -437,7 +430,7 @@ namespace IDCodePrinter
                 send.Add("PackSN", packSN);
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-
+                Logger.Info("step4T-1->" + getStr);
                 //写站完成 AGV放行
                 postDataAPI = new PostDataAPI();
                 send = new JObject();
@@ -450,6 +443,7 @@ namespace IDCodePrinter
                 send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
                 //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                Logger.Info("step4T-2->" + getStr);
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
             }
@@ -761,7 +755,7 @@ namespace IDCodePrinter
         void printTagAuto(string packSN, string BMC_Rev, string BMC_HW_Rev)
         {
             if (InvokeRequired)
-                Invoke(new printTagDelegate(printTag), new object[] { packSN, BMC_Rev, BMC_HW_Rev });
+                Invoke(new printTagDelegate(printTagAuto), new object[] { packSN, BMC_Rev, BMC_HW_Rev });
             else
             {
                 Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -890,6 +884,20 @@ namespace IDCodePrinter
                 if (printerName != "")
                     doc.PrintDocument.PrinterSettings.PrinterName = printerName;
                 doc.PrintDocument.Print();
+
+                //关键条码上传
+                PostDataAPI postDataAPI = new PostDataAPI();
+                JObject send = new JObject();
+                send.Add("StationID", "A490");
+                send.Add("PackSN", packSN);
+                send.Add("DataTime", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+                send.Add("PartsCode", "-");//?
+                send.Add("KeyCode", DataMatrixStr);
+                send.Add("LineID", "A490");
+                send.Add("PartsID", "-");//?
+                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/Keybarcode", send.ToString());
+                //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                Logger.Info("printTagAuto->" + getStr);
             }
         }
         //private List<Stream> m_streams;
