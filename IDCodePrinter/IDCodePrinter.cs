@@ -63,6 +63,9 @@ namespace IDCodePrinter
                 plc = new PLC(CPU_Type.S7300, ConfigurationManager.AppSettings["S7IP"].ToString(), 0, 2);
                 if (plc.Open() == ErrorCode.NoError)
                 {
+                    plc.WriteBytes(DataType.DataBlock, 160, 112, new byte[] { 0x00, 0x01 });
+                    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x04 });
+                    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x04 });
                     t = new Thread(S7Thread);
                     t.IsBackground = true;
                     t.Start();
@@ -163,6 +166,7 @@ namespace IDCodePrinter
                         step4F(readBuff[11] == 1);
                         step5(readBuff[5] == 1);
                         step6(readBuff[7] == 1);
+                        Logger.Info("1->" + readBuff[1] + "|3->" + readBuff[3] + "|9->" + readBuff[9] + "|11->" + readBuff[11] + "|5->" + readBuff[5] + "|7->" + readBuff[7]);
                     }
                 }
                 catch(Exception ex)
@@ -179,10 +183,12 @@ namespace IDCodePrinter
         {
             packSN = "";
             json = null;
-            //json2 = null;
+            json2 = null;
             type = 0;
-            readBuff = null;
+            //readBuff = null;
             DataMatrixStr = "";
+
+            plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
         }
 
         /// <summary>
@@ -197,8 +203,9 @@ namespace IDCodePrinter
                 plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 0x00 });
             else
             {
-                if (json == null)
-                {
+                //if (json == null)
+                //{
+                    reSetPram();
                     try
                     {
                         PostDataAPI postDataAPI = new PostDataAPI();
@@ -211,8 +218,9 @@ namespace IDCodePrinter
                         Logger.Error(ex, "step1 Data从服务器请求超时");
                         plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
                     }
-                }
+                //}
 
+                Logger.Info("step1-Type->" + type);
                 if (json["AGVSN"].ToString() == "-1")
                     type = 113;
                 else if (json["Pack1SN"].ToString() == "" && json["Pack2SN"].ToString() == "")
@@ -221,7 +229,29 @@ namespace IDCodePrinter
                 {
                     type = byte.Parse(json["Type"].ToString());
                 }
+                Logger.Info("step1-Type2->" + type);
+                if (json["Pack1SN"].ToString() == "")
+                    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x00 });
+                else
+                {
+                    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x04 });
+                    //if (json["Pack2Status"].ToString() == "1")
+                    //    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x04 });
+                    //else
+                    //    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x03 });
+                }
 
+                if (json["Pack2SN"].ToString() == "")
+                    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x00 });
+                else
+                {
+                    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x04 });
+                    //if(json["Pack2Status"].ToString() == "1")
+                    //    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x04 });
+                    //else
+                    //    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x03 });
+                }
+                Logger.Info("step1-Type3->" + type);
                 plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, type });
 
                 Logger.Info("step1");
@@ -266,11 +296,17 @@ namespace IDCodePrinter
         /// </summary>
         void step5(bool flag)
         {
-            if (lastFlag5 == flag)
-                return;
+            //if (lastFlag5 == flag)
+            //{
+            //    //Logger.Info("step5-> 00");
+            //    return;
+            //}
 
             if (!flag)
+            {
+                Logger.Info("step5-> 11");
                 plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
+            }
             else
             {
                 string printPackSN = packSNArr;
@@ -289,8 +325,11 @@ namespace IDCodePrinter
                 //        printPackSN = "SVWAB" + packSNArr[1];
                 //}
 
+                Logger.Info("step5-> 22");
+
                 if (printPackSN != "")
                 {
+                    Logger.Info("step5-> 33");
                     string BMC_Rev = "200";
                     string BMC_HW_Rev = "M02";
                     try
@@ -363,7 +402,7 @@ namespace IDCodePrinter
                             if (DMStr == DataMatrixStr && DataMatrixStr != "")
                             {
                                 plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
-                                reSetPram();
+                                //reSetPram();
                                 break;
                             }
                             if (DMStr == "")
@@ -446,6 +485,9 @@ namespace IDCodePrinter
                 Logger.Info("step4T-2->" + getStr);
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
+                //plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x00 });
+                step5(true);
+                //reSetPram();
             }
 
             Logger.Info("step4T");
@@ -835,8 +877,8 @@ namespace IDCodePrinter
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
                 ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
-                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
-                ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
+                ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", BMC_Rev);
+                ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", BMC_HW_Rev);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType +
@@ -895,9 +937,10 @@ namespace IDCodePrinter
                 send.Add("KeyCode", DataMatrixStr);
                 send.Add("LineID", "A490");
                 send.Add("PartsID", "-");//?
+                Logger.Info("printTagAuto1->" + send.ToString());
                 string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/Keybarcode", send.ToString());
                 //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                Logger.Info("printTagAuto->" + getStr);
+                Logger.Info("printTagAuto2->" + getStr);
             }
         }
         //private List<Stream> m_streams;
