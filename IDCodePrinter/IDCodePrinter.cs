@@ -82,10 +82,46 @@ namespace IDCodePrinter
                 SPort.ReadTimeout = 2000;
                 SPort.WriteTimeout = 2000;
                 SPort.Open();
+                //////////////////////
+                t = new Thread(Check480);
+                t.IsBackground = true;
+                t.Start();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "初始化异常");
+            }
+        }
+
+        void Check480()
+        {
+            while (runFlag)
+            {
+                try
+                {
+                    PostDataAPI postDataAPI = new PostDataAPI();
+                    string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"R480\" }");
+                    JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+
+                    if (getjson["AGVID"].ToString() != "-1")
+                    {
+                        JObject send = new JObject();
+                        send.Add("StationID", "R480");
+                        send.Add("Pack1SN", getjson["Pack1SN"].ToString());
+                        send.Add("Pack1Status", "3");
+                        send.Add("Pack2SN", getjson["Pack2SN"].ToString());
+                        send.Add("Pack2Status", "3");
+                        send.Add("IsReturnRepair", false);
+                        send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
+                        Logger.Info("Check480-2->" + getStr);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
+                Thread.Sleep(2000);
             }
         }
 
@@ -462,14 +498,22 @@ namespace IDCodePrinter
             {
                 //统一解绑
                 PostDataAPI postDataAPI = new PostDataAPI();
-                string getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/GetStationAGV", "{ \"StationID\" : \"A490\" }");
+                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
                 JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 JObject send = new JObject();
                 send.Add("AGVSN", getjson["AGVID"].ToString());
-                send.Add("PackSN", packSN);
+                send.Add("PackSN", getjson["Pack1SN"].ToString());
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                Logger.Info("step4T-1->" + getStr);
+                Logger.Info("step4T-1.1->" + getStr);
+
+                send = new JObject();
+                send.Add("AGVSN", getjson["AGVID"].ToString());
+                send.Add("PackSN", getjson["Pack2SN"].ToString());
+                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                Logger.Info("step4T-1.2->" + getStr);
+                
                 //写站完成 AGV放行
                 postDataAPI = new PostDataAPI();
                 send = new JObject();
@@ -811,6 +855,7 @@ namespace IDCodePrinter
 
                 PostDataAPI postDataAPI = new PostDataAPI();
                 string getStr2 = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getPackSNkeyCode", "{\"PackSN\": \"" + packSN + "\"}");
+                Logger.Info("printTagAuto0->" + getStr2);
                 JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr2);
 
                 DateTime datetime = Convert.ToDateTime(getjson["OrderProductTime"].ToString());
@@ -1252,7 +1297,6 @@ namespace IDCodePrinter
             try
             {
                 PostDataAPI postDataAPI = new PostDataAPI();
-                postDataAPI = new PostDataAPI();
                 JObject send = new JObject();
                 send.Add("StationID", "A490");
                 send.Add("Pack1SN", "");
