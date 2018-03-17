@@ -808,25 +808,30 @@ namespace IDCodePrinter
                 label7.Text = packSN;
                 //NewDBLib dblib = new NewDBLib();
                 //DataTable dt;
-                DateTime datetime = DateTime.Now;
+
+                PostDataAPI postDataAPI = new PostDataAPI();
+                string getStr2 = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getPackSNkeyCode", "{\"PackSN\": \"" + packSN + "\"}");
+                JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr2);
+
+                DateTime datetime = Convert.ToDateTime(getjson["OrderProductTime"].ToString());
                 LocalReport report = new LocalReport();
                 report.ReportPath = @".\Report\Report1.rdlc";
 
-                string BType = "--";
-                string sn = "-------";
-                if (packSN.Length == 15)
-                {
-                    //BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
-                    if (comboBox1.SelectedIndex == 4)
-                        BType = "B1";
-                    else if (comboBox1.SelectedIndex == 5)
-                        BType = "C1";
-                    else
-                        BType = "A1";
-                    sn = "0000" + packSN.Substring(11, 3);
-                }
-                string Feld6E16 = CreateFeld6E16(datetime, sn);
-                Image img = Encode_Code_39("SVWPE" + BType + (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
+                //string BType = "--";
+                //string sn = "-------";
+                //if (packSN.Length == 15)
+                //{
+                //    //BType = packSN.Substring(4, 1) == "P" ? "A1" : "E1";
+                //    if (comboBox1.SelectedIndex == 4)
+                //        BType = "B1";
+                //    else if (comboBox1.SelectedIndex == 5)
+                //        BType = "C1";
+                //    else
+                //        BType = "A1";
+                //    sn = Convert.ToInt32(packSN.Substring(11, 3), 16).ToString("0000000");
+                //}
+                //string Feld6E16 = CreateFeld6E16(datetime, sn);
+                Image img = Encode_Code_39(getjson["PackKeyCode"].ToString());
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
@@ -876,13 +881,12 @@ namespace IDCodePrinter
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", DateTime.Now.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", BMC_Rev);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", BMC_HW_Rev);
                 ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
-                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType +
-                    (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
+                ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", getjson["PackKeyCode"].ToString());
                 ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
                 ReportParameter ReportParam11 = new ReportParameter("ReportParameter11", rp11);
                 ReportParameter ReportParam12 = new ReportParameter("ReportParameter12", rp12);
@@ -928,7 +932,7 @@ namespace IDCodePrinter
                 doc.PrintDocument.Print();
 
                 //关键条码上传
-                PostDataAPI postDataAPI = new PostDataAPI();
+                postDataAPI = new PostDataAPI();
                 JObject send = new JObject();
                 send.Add("StationID", "A490");
                 send.Add("PackSN", packSN);
