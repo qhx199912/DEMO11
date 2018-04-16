@@ -103,23 +103,35 @@ namespace IDCodePrinter
                     string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"R480\" }");
                     JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
-                    if (getjson["AGVID"].ToString() != "-1")
+                    if (getjson["AGVSN"].ToString() != "-1")
                     {
+                        //JObject send = new JObject();
+                        //send.Add("StationID", "R480");
+                        //send.Add("Pack1SN", getjson["Pack1SN"].ToString());
+                        //send.Add("Pack1Status", "3");
+                        //send.Add("Pack2SN", getjson["Pack2SN"].ToString());
+                        //send.Add("Pack2Status", "3");
+                        //send.Add("IsReturnRepair", false);
+                        //send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+                        //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
+                        //Logger.Info("Check480-2->" + getStr);
+
+                        //空车强制放行
                         JObject send = new JObject();
                         send.Add("StationID", "R480");
-                        send.Add("Pack1SN", getjson["Pack1SN"].ToString());
-                        send.Add("Pack1Status", "3");
-                        send.Add("Pack2SN", getjson["Pack2SN"].ToString());
-                        send.Add("Pack2Status", "3");
-                        send.Add("IsReturnRepair", false);
-                        send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
-                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
-                        Logger.Info("Check480-2->" + getStr);
+                        getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/RequestAgvLeave", send.ToString());
+                        Logger.Info("站完成-2.2->" + getStr);
+                        getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+
+                        if (getjson["ResultCode"].ToString() == "1")
+                            Thread.Sleep(5000);
+                        else
+                            MessageBox.Show("480工位 小车自动放行异常->" + getjson["ResultCode"].ToString());
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex);
+                    Logger.Error(ex, "Check480");
                 }
                 Thread.Sleep(2000);
             }
@@ -501,14 +513,14 @@ namespace IDCodePrinter
                 string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
                 JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 JObject send = new JObject();
-                send.Add("AGVSN", getjson["AGVID"].ToString());
+                send.Add("AGVSN", getjson["AGVSN"].ToString());
                 send.Add("PackSN", getjson["Pack1SN"].ToString());
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 Logger.Info("step4T-1.1->" + getStr);
 
                 send = new JObject();
-                send.Add("AGVSN", getjson["AGVID"].ToString());
+                send.Add("AGVSN", getjson["AGVSN"].ToString());
                 send.Add("PackSN", getjson["Pack2SN"].ToString());
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
