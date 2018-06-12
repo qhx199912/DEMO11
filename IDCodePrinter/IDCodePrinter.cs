@@ -102,7 +102,7 @@ namespace IDCodePrinter
                     PostDataAPI postDataAPI = new PostDataAPI();
                     string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"R480\" }");
                     JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-
+                    Logger.Info("站完成-1->" + getStr);
                     if (getjson["AGVSN"].ToString() != "-1")
                     {
                         //JObject send = new JObject();
@@ -123,10 +123,10 @@ namespace IDCodePrinter
                         Logger.Info("站完成-2.2->" + getStr);
                         getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
-                        if (getjson["ResultCode"].ToString() == "1")
+                        if (getjson["ResultCode"].ToString() == "0")
                             Thread.Sleep(5000);
-                        else
-                            MessageBox.Show("480工位 小车自动放行异常->" + getjson["ResultCode"].ToString());
+                        //else
+                        //    MessageBox.Show("480工位 小车自动放行异常->" + getjson["ResultCode"].ToString());
                     }
                 }
                 catch (Exception ex)
