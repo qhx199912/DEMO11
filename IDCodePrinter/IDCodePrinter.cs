@@ -750,19 +750,32 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";
                 if (comboBox1.SelectedIndex == 2)
                     Feld2 = "5KE.915.588.A";
-                else if (comboBox1.SelectedIndex >= 4)
+                else if (comboBox1.SelectedIndex == 4)
+                    Feld2 = "5KE.915.919.AB";
+                else if (comboBox1.SelectedIndex > 4)
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
+                string rp14 = "352";
+                string rp15 = "IP6K6K,IP6K7";
                 if (comboBox1.SelectedIndex < 4)
                 {
                     DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                         (char)(comboBox1.SelectedIndex + 0x41) +
                         int.Parse(packSN.Substring(6, 3)).ToString("X3"));
+
+                    if (comboBox1.SelectedIndex == 0)
+                    {
+                        rp8 = "34.7";
+                        rp11 = "BATTYPV15";
+                        rp12 = "12.1";
+                        rp13 = "127";
+                        rp14 = "350";
+                    }
                 }
                 else
                 {
@@ -773,10 +786,12 @@ namespace IDCodePrinter
                     
                     if (comboBox1.SelectedIndex == 4)
                     {
-                        rp8 = "106";
+                        rp8 = "99";
                         rp11 = "BATTYPV20";
-                        rp12 = "37,0";
-                        rp13 = "350";
+                        rp12 = "34,8";
+                        rp13 = "329";
+                        rp14 = "350";
+                        //rp15 = "IP6K6K,IP6K7";
                     }
                     else
                     {
@@ -808,9 +823,12 @@ namespace IDCodePrinter
                 ReportParameter ReportParam11 = new ReportParameter("ReportParameter11", rp11);
                 ReportParameter ReportParam12 = new ReportParameter("ReportParameter12", rp12);
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
+                ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
+                ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
-                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13 });
+                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
+                    ReportParam15 });
 
                 report.Refresh();
 
@@ -895,17 +913,30 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";
                 if (comboBox1.SelectedIndex == 2)
                     Feld2 = "5KE.915.588.A";
-                else if (comboBox1.SelectedIndex >= 4)
+                else if (comboBox1.SelectedIndex == 4)
+                    Feld2 = "5KE.915.919.AB";
+                else if (comboBox1.SelectedIndex > 4)
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
+                string rp14 = "352";
+                string rp15 = "IP6K6K,IP6K7";
                 if (comboBox1.SelectedIndex < 4)
                 {
                     DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), packSN);
+
+                    if (comboBox1.SelectedIndex == 0)
+                    {
+                        rp8 = "34.7";
+                        rp11 = "BATTYPV15";
+                        rp12 = "12.1";
+                        rp13 = "127";
+                        rp14 = "350";
+                    }
                 }
                 else
                 {
@@ -914,10 +945,12 @@ namespace IDCodePrinter
 
                     if (comboBox1.SelectedIndex == 4)
                     {
-                        rp8 = "106";
+                        rp8 = "99";
                         rp11 = "BATTYPV20";
-                        rp12 = "37,0";
-                        rp13 = "350";
+                        rp12 = "34,8";
+                        rp13 = "329";
+                        rp14 = "350";
+                        //rp15 = "IP6K6K,IP6K7";
                     }
                     else
                     {
@@ -948,9 +981,12 @@ namespace IDCodePrinter
                 ReportParameter ReportParam11 = new ReportParameter("ReportParameter11", rp11);
                 ReportParameter ReportParam12 = new ReportParameter("ReportParameter12", rp12);
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
+                ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
+                ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
-                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13 });
+                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
+                    ReportParam15 });
 
                 report.Refresh();
 
@@ -1085,19 +1121,32 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";//14
                 if (comboBox1.SelectedIndex == 2)
                     Feld2 = "5KE.915.588.A";
-                else if (comboBox1.SelectedIndex >= 4)
+                else if (comboBox1.SelectedIndex == 4)
+                    Feld2 = "5KE.915.919.AB";
+                else if (comboBox1.SelectedIndex > 4)
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
+                string rp14 = "352";
+                string rp15 = "IP6K6K,IP6K7";
                 if (comboBox1.SelectedIndex < 4)
                 {
                     DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".","").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
                         (char)(comboBox1.SelectedIndex + 0x41) +
                         int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
+
+                    if(comboBox1.SelectedIndex == 0)
+                    {
+                        rp8 = "34.7";
+                        rp11 = "BATTYPV15";
+                        rp12 = "12.1";
+                        rp13 = "127";
+                        rp14 = "350";
+                    }
                 }
                 else
                 {
@@ -1108,10 +1157,12 @@ namespace IDCodePrinter
 
                     if (comboBox1.SelectedIndex == 4)
                     {
-                        rp8 = "106";
+                        rp8 = "99";
                         rp11 = "BATTYPV20";
-                        rp12 = "37,0";
-                        rp13 = "350";
+                        rp12 = "34,8";
+                        rp13 = "329";
+                        rp14 = "350";
+                        //rp15 = "IP6K6K,IP6K7";
                     }
                     else
                     {
@@ -1143,9 +1194,12 @@ namespace IDCodePrinter
                 ReportParameter ReportParam11 = new ReportParameter("ReportParameter11", rp11);
                 ReportParameter ReportParam12 = new ReportParameter("ReportParameter12", rp12);
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
+                ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
+                ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
-                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13 });
+                    ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
+                    ReportParam15 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)
