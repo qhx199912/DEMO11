@@ -701,7 +701,7 @@ namespace IDCodePrinter
             //doc.PrintDocument.Print();
             try
             {
-                printTag(textBox2.Text, "0" + textBox1.Text, textBox3.Text);
+                printTag(textBox2.Text, textBox1.Text, textBox3.Text);
             }
             catch (Exception ex)
             {
@@ -910,12 +910,13 @@ namespace IDCodePrinter
                 Bitmap imgBit = new Bitmap(img);
                 byte[] imgBytes = BitmapToBytes(imgBit);
 
+                string packType = packSN.Substring(10, 1);
                 string Feld2 = "5KE.915.588";
-                if (comboBox1.SelectedIndex == 2)
+                if (packType == "C")//C
                     Feld2 = "5KE.915.588.A";
-                else if (comboBox1.SelectedIndex == 4)
+                else if (packType == "E")//E
                     Feld2 = "5KE.915.919.AB";
-                else if (comboBox1.SelectedIndex > 4)
+                else if (packType == "F")//F
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
@@ -924,12 +925,12 @@ namespace IDCodePrinter
                 string rp13 = "125";
                 string rp14 = "352";
                 string rp15 = "IP6K6K,IP6K7";
-                if (comboBox1.SelectedIndex < 4)
+                if (packType == "A" || packType == "B" || packType == "C" || packType == "D")//ABCD
                 {
                     DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
                         "037", datetime.ToString("ddMMyy"), packSN);
 
-                    if (comboBox1.SelectedIndex == 0)
+                    if (packType == "A")//A
                     {
                         rp8 = "34.7";
                         rp11 = "BATTYPV15";
@@ -941,9 +942,9 @@ namespace IDCodePrinter
                 else
                 {
                     DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
-                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), packSN);
+                           packType == "E" ? "053" : "060", datetime.ToString("ddMMyy"), packSN);
 
-                    if (comboBox1.SelectedIndex == 4)
+                    if (packType == "E")
                     {
                         rp8 = "99";
                         rp11 = "BATTYPV20";
