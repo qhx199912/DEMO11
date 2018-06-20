@@ -344,74 +344,78 @@ namespace IDCodePrinter
         /// </summary>
         void step5(bool flag)
         {
-            //if (lastFlag5 == flag)
-            //{
-            //    //Logger.Info("step5-> 00");
-            //    return;
-            //}
-
-            if (!flag)
+            try
             {
-                Logger.Info("step5-> 11");
-                plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
-            }
-            else
-            {
-                string printPackSN = packSNArr;
-
-                bool isOK = false;
-                if (json["Pack1SN"].ToString() == packSN)
-                    isOK = json["Pack1Status"].ToString() == "1" ? true : false;
-                if (json["Pack2SN"].ToString() == packSN)
-                    isOK = json["Pack2Status"].ToString() == "1" ? true : false;
-
-                //if (packSNArr.Length == 2)
-                //{
-                //    if (packSNArr[0] == "PHEV")
-                //        printPackSN = "SVWAP" + packSNArr[1];
-                //    else if (packSNArr[0] == "BEV")
-                //        printPackSN = "SVWAB" + packSNArr[1];
-                //}
-
-                Logger.Info("step5-> 22");
-
-                if (printPackSN != "")
+                if (!flag)
                 {
-                    Logger.Info("step5-> 33");
-                    string BMC_Rev = "200";
-                    string BMC_HW_Rev = "M02";
-                    try
-                    {
-                        PostDataAPI postDataAPI = new PostDataAPI();
-                        string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN + "\" }");
-                        Logger.Info("step5->" + getStr);
-                        JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                        BMC_Rev = tdv["VersionData"]["SW_BMC"]["Value"].ToString();
-                        BMC_HW_Rev = tdv["VersionData"]["HW_BMC"]["Value"].ToString();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, "step5 从服务器查询软硬件版本异常");
-                        plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
-                    }
-
-                    try
-                    {
-                        printTagAuto(printPackSN, "0" + BMC_Rev, BMC_HW_Rev);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex, "打印机故障");
-                        plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 180 });
-
-                    }
-                    //Thread.Sleep(3000);
-                    plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x01 });
+                    Logger.Info("step5-> 11");
+                    plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
                 }
                 else
-                    DataMatrixStr = "";
+                {
+                    if (lastFlag5 == false && flag)
+                    {
+                        string printPackSN = packSNArr;
 
-                Logger.Info("step5");
+                        bool isOK = false;
+                        if (json["Pack1SN"].ToString() == packSN)
+                            isOK = json["Pack1Status"].ToString() == "1" ? true : false;
+                        if (json["Pack2SN"].ToString() == packSN)
+                            isOK = json["Pack2Status"].ToString() == "1" ? true : false;
+
+                        //if (packSNArr.Length == 2)
+                        //{
+                        //    if (packSNArr[0] == "PHEV")
+                        //        printPackSN = "SVWAP" + packSNArr[1];
+                        //    else if (packSNArr[0] == "BEV")
+                        //        printPackSN = "SVWAB" + packSNArr[1];
+                        //}
+
+                        Logger.Info("step5-> 22");
+
+                        if (printPackSN != "")
+                        {
+                            Logger.Info("step5-> 33");
+                            string BMC_Rev = "200";
+                            string BMC_HW_Rev = "M02";
+                            try
+                            {
+                                PostDataAPI postDataAPI = new PostDataAPI();
+                                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/query/getTestDataVersion", "{ \"PackSN\" : \"" + packSN + "\" }");
+                                Logger.Info("step5->" + getStr);
+                                JObject tdv = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                                BMC_Rev = tdv["VersionData"]["SW_BMC"]["Value"].ToString();
+                                BMC_HW_Rev = tdv["VersionData"]["HW_BMC"]["Value"].ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex, "step5 从服务器查询软硬件版本异常");
+                                plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, 101 });
+                            }
+
+                            try
+                            {
+                                printTagAuto(printPackSN, BMC_Rev, BMC_HW_Rev);
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex, "打印机故障");
+                                plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 180 });
+
+                            }
+                            //Thread.Sleep(3000);
+                            plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x01 });
+                        }
+                        else
+                            DataMatrixStr = "";
+
+                        Logger.Info("step5");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Debug(ex, "step5-76");
             }
             lastFlag5 = flag;
         }
