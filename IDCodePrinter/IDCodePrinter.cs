@@ -760,6 +760,7 @@ namespace IDCodePrinter
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
+                string rp8dm = "037";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
@@ -767,30 +768,27 @@ namespace IDCodePrinter
                 string rp15 = "IP6K6K,IP6K7";
                 if (comboBox1.SelectedIndex < 4)
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
-                        "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
-                        (char)(comboBox1.SelectedIndex + 0x41) +
-                        int.Parse(packSN.Substring(6, 3)).ToString("X3"));
-
                     if (comboBox1.SelectedIndex == 0)
                     {
                         rp8 = "34.7";
+                        rp8dm = "034";
                         rp11 = "BATTYPV15";
                         rp12 = "12.1";
                         rp13 = "127";
                         rp14 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
+                        rp8dm, datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                        (char)(comboBox1.SelectedIndex + 0x41) +
+                        int.Parse(packSN.Substring(6, 3)).ToString("X3"));
                 }
                 else
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
-                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
-                           (char)(comboBox1.SelectedIndex + 0x41) +
-                           int.Parse(packSN.Substring(6, 3)).ToString("X3"));
-                    
                     if (comboBox1.SelectedIndex == 4)
                     {
                         rp8 = "99";
+                        rp8dm = "099";
                         rp11 = "BATTYPV20";
                         rp12 = "34,8";
                         rp13 = "329";
@@ -800,10 +798,16 @@ namespace IDCodePrinter
                     else
                     {
                         rp8 = "120";
+                        rp8dm = "120";
                         rp11 = "BATTYPV20";
                         rp12 = "37,0";
                         rp13 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
+                           rp8dm, datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                           (char)(comboBox1.SelectedIndex + 0x41) +
+                           int.Parse(packSN.Substring(6, 3)).ToString("X3"));
                 }
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
@@ -924,6 +928,7 @@ namespace IDCodePrinter
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
+                string rp8dm = "037";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
@@ -931,26 +936,25 @@ namespace IDCodePrinter
                 string rp15 = "IP6K6K,IP6K7";
                 if (packType == "A" || packType == "B" || packType == "C" || packType == "D")//ABCD
                 {
-                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
-                        "037", datetime.ToString("ddMMyy"), packSN);
-
                     if (packType == "A")//A
                     {
                         rp8 = "34.7";
+                        rp8dm = "034";
                         rp11 = "BATTYPV15";
                         rp12 = "12.1";
                         rp13 = "127";
                         rp14 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
+                        rp8dm, datetime.ToString("ddMMyy"), packSN);
                 }
                 else
                 {
-                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
-                           packType == "E" ? "053" : "060", datetime.ToString("ddMMyy"), packSN);
-
                     if (packType == "E")
                     {
                         rp8 = "99";
+                        rp8dm = "099";
                         rp11 = "BATTYPV20";
                         rp12 = "34,8";
                         rp13 = "329";
@@ -960,10 +964,14 @@ namespace IDCodePrinter
                     else
                     {
                         rp8 = "120";
+                        rp8dm = "120";
                         rp11 = "BATTYPV20";
                         rp12 = "37,0";
                         rp13 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
+                           rp8dm, datetime.ToString("ddMMyy"), packSN);
                 }
 
                 //DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
@@ -1132,6 +1140,7 @@ namespace IDCodePrinter
                     Feld2 = "5KE.915.919.AA";
 
                 string rp8 = "37";
+                string rp8dm = "037";
                 string rp11 = "BATTYPV15";
                 string rp12 = "13,0";
                 string rp13 = "125";
@@ -1139,30 +1148,27 @@ namespace IDCodePrinter
                 string rp15 = "IP6K6K,IP6K7";
                 if (comboBox1.SelectedIndex < 4)
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".","").PadRight(14, ' '),
-                        "037", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
-                        (char)(comboBox1.SelectedIndex + 0x41) +
-                        int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
-
-                    if(comboBox1.SelectedIndex == 0)
+                    if (comboBox1.SelectedIndex == 0)
                     {
                         rp8 = "34.7";
+                        rp8dm = "034";
                         rp11 = "BATTYPV15";
                         rp12 = "12.1";
                         rp13 = "127";
                         rp14 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".","").PadRight(14, ' '),
+                        rp8dm, datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                        (char)(comboBox1.SelectedIndex + 0x41) +
+                        int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
                 }
                 else
                 {
-                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
-                           comboBox1.SelectedIndex == 4 ? "053" : "060", datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
-                           (char)(comboBox1.SelectedIndex + 0x41) +
-                           int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
-
                     if (comboBox1.SelectedIndex == 4)
                     {
                         rp8 = "99";
+                        rp8dm = "099";
                         rp11 = "BATTYPV20";
                         rp12 = "34,8";
                         rp13 = "329";
@@ -1172,10 +1178,16 @@ namespace IDCodePrinter
                     else
                     {
                         rp8 = "120";
+                        rp8dm = "120";
                         rp11 = "BATTYPV20";
                         rp12 = "37,0";
                         rp13 = "350";
                     }
+
+                    DataMatrixStr = string.Format(DMCodeFormat, Feld2.Replace(".", "").PadRight(14, ' '),
+                           rp8dm, datetime.ToString("ddMMyy"), Feld6E16.Substring(0, 3) +
+                           (char)(comboBox1.SelectedIndex + 0x41) +
+                           int.Parse(textBox2.Text.Substring(6, 3)).ToString("X3"));
                 }
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
