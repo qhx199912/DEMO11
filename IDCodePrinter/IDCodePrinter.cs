@@ -522,14 +522,35 @@ namespace IDCodePrinter
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 Logger.Info("step4T-1.1->" + getStr);
+                ////--------------------
+                if (getjson["Pack1Status"].ToString() == "2")
+                {
+                    send = new JObject();
+                    send.Add("AGVSN", getjson["AGVSN"].ToString());
+                    send.Add("PackSN", getjson["Pack1SN"].ToString());
+                    send.Add("Status", getjson["Pack1Status"].ToString());
+                    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                }
 
+                /////////////////////////////////////
                 send = new JObject();
                 send.Add("AGVSN", getjson["AGVSN"].ToString());
                 send.Add("PackSN", getjson["Pack2SN"].ToString());
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
                 //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 Logger.Info("step4T-1.2->" + getStr);
-                
+                ////--------------------
+                if (getjson["Pack2Status"].ToString() == "2")
+                {
+                    send = new JObject();
+                    send.Add("AGVSN", getjson["AGVSN"].ToString());
+                    send.Add("PackSN", getjson["Pack2SN"].ToString());
+                    send.Add("Status", getjson["Pack2Status"].ToString());
+                    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                }
+
                 //写站完成 AGV放行
                 postDataAPI = new PostDataAPI();
                 send = new JObject();
