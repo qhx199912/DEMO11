@@ -812,6 +812,8 @@ namespace IDCodePrinter
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
+                string plainCode0 = "*" + plainCode + "*";
+                string plainCode1 = plainCode.Substring(3, 4) + " " + plainCode.Substring(7, 7);
 
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
@@ -823,7 +825,7 @@ namespace IDCodePrinter
                 ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
-                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode1);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType + 
                     (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
@@ -833,10 +835,11 @@ namespace IDCodePrinter
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
                 ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
                 ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
+                ReportParameter ReportParam16 = new ReportParameter("ReportParameter16", plainCode0);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
                     ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
-                    ReportParam15 });
+                    ReportParam15, ReportParam16 });
 
                 report.Refresh();
 
@@ -927,6 +930,7 @@ namespace IDCodePrinter
                 else if (packType == "F")//F
                     Feld2 = "5KE.915.919.AA";
 
+                DateTime dateTime0 = DateTime.Now;
                 string rp8 = "37";
                 string rp8dm = "037";
                 string rp11 = "BATTYPV15";
@@ -947,7 +951,7 @@ namespace IDCodePrinter
                     }
 
                     DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
-                        rp8dm, datetime.ToString("ddMMyy"), packSN);
+                        rp8dm, dateTime0.ToString("ddMMyy"), packSN);
                 }
                 else
                 {
@@ -971,11 +975,13 @@ namespace IDCodePrinter
                     }
 
                     DataMatrixStr = string.Format(DMCodeFormatAuto, Feld2.Replace(".", "").PadRight(14, ' '),
-                           rp8dm, datetime.ToString("ddMMyy"), packSN);
+                           rp8dm, dateTime0.ToString("ddMMyy"), packSN);
                 }
 
                 //DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
+                string plainCode0 = "*" + plainCode + "*";
+                string plainCode1 = plainCode.Substring(3, 4) + " " + plainCode.Substring(7, 7);
 
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
@@ -984,10 +990,10 @@ namespace IDCodePrinter
                 ReportParameter ReportParam = new ReportParameter("ReportParameter1", Convert.ToBase64String(imgBytes));
                 ReportParameter ReportParam2 = new ReportParameter("ReportParameter2", Convert.ToBase64String(imgBytes2));
                 ReportParameter ReportParam3 = new ReportParameter("ReportParameter3", textBox4.Text);
-                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", DateTime.Now.ToString("ddMMyyyy"));
+                ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", BMC_Rev);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", BMC_HW_Rev);
-                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode1);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", getjson["PackKeyCode"].ToString());
                 ReportParameter ReportParam10 = new ReportParameter("ReportParameter10", Feld2);
@@ -996,10 +1002,11 @@ namespace IDCodePrinter
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
                 ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
                 ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
+                ReportParameter ReportParam16 = new ReportParameter("ReportParameter16", plainCode0);
                 report.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
                     ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
-                    ReportParam15 });
+                    ReportParam15, ReportParam16 });
 
                 report.Refresh();
 
@@ -1192,6 +1199,8 @@ namespace IDCodePrinter
 
                 DataMatrixStr += DMStrCheck(DataMatrixStr.Split('*')[1]);
                 string plainCode = DataMatrixStr.Split('*')[1];
+                string plainCode0 = "*" + plainCode + "*";
+                string plainCode1 = plainCode.Substring(3, 4) + " " + plainCode.Substring(7, 7);
 
                 Image img2 = Encode_DM(DataMatrixStr, 5, 10);
                 Bitmap imgBit2 = new Bitmap(img2);
@@ -1203,7 +1212,7 @@ namespace IDCodePrinter
                 ReportParameter ReportParam4 = new ReportParameter("ReportParameter4", datetime.ToString("ddMMyyyy"));
                 ReportParameter ReportParam5 = new ReportParameter("ReportParameter5", textBox1.Text);
                 ReportParameter ReportParam6 = new ReportParameter("ReportParameter6", textBox3.Text);
-                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode);
+                ReportParameter ReportParam7 = new ReportParameter("ReportParameter7", plainCode1);
                 ReportParameter ReportParam8 = new ReportParameter("ReportParameter8", rp8);
                 ReportParameter ReportParam9 = new ReportParameter("ReportParameter9", "SVWPE" + BType +
                     (char)(comboBox1.SelectedIndex + 0x41) + Feld6E16);
@@ -1213,10 +1222,11 @@ namespace IDCodePrinter
                 ReportParameter ReportParam13 = new ReportParameter("ReportParameter13", rp13);
                 ReportParameter ReportParam14 = new ReportParameter("ReportParameter14", rp14);
                 ReportParameter ReportParam15 = new ReportParameter("ReportParameter15", rp15);
+                ReportParameter ReportParam16 = new ReportParameter("ReportParameter16", plainCode0);
                 reportViewer1.LocalReport.SetParameters(new ReportParameter[] { ReportParam, ReportParam2,
                     ReportParam3, ReportParam4, ReportParam5, ReportParam6, ReportParam7, ReportParam8,
                     ReportParam9, ReportParam10, ReportParam11, ReportParam12, ReportParam13, ReportParam14,
-                    ReportParam15 });
+                    ReportParam15, ReportParam16 });
                 reportViewer1.RefreshReport();
             }
             catch (Exception ex)

@@ -56,6 +56,7 @@
             this.reportViewer1.LocalReport.ReportEmbeddedResource = "IDCodePrinter.Report.Report1.rdlc";
             this.reportViewer1.Location = new System.Drawing.Point(14, 96);
             this.reportViewer1.Name = "reportViewer1";
+            this.reportViewer1.ServerReport.BearerToken = null;
             this.reportViewer1.Size = new System.Drawing.Size(423, 406);
             this.reportViewer1.TabIndex = 2;
             // 
@@ -217,12 +218,12 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "37Ah Tiguan PHEV C5",
-            "37Ah Tiguan PHEV C6",
-            "37Ah Passat PHEV C5",
-            "37Ah Passat PHEV C6",
-            "53Ah BEV",
-            "60Ah BEV"});
+            "034Ah Tiguan PHEV C5",
+            "037Ah Tiguan PHEV C6",
+            "037Ah Passat PHEV C5",
+            "037Ah Passat PHEV C6",
+            "099Ah BEV",
+            "120Ah BEV"});
             this.comboBox1.Location = new System.Drawing.Point(347, 5);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(181, 20);
