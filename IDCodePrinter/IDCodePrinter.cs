@@ -561,6 +561,7 @@ namespace IDCodePrinter
                 send.Add("Pack2Status", json["Pack2Status"].ToString());
                 send.Add("IsReturnRepair", false);
                 send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
+                Logger.Info("step4T-2-Send->" + send.ToString());
                 getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
                 //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 Logger.Info("step4T-2->" + getStr);
