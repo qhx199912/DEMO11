@@ -775,6 +775,8 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";
                 if (comboBox1.SelectedIndex == 2)
                     Feld2 = "5KE.915.588.A";
+                else if (comboBox1.SelectedIndex == 1 || comboBox1.SelectedIndex == 3)
+                    Feld2 = "5KE.915.598.B";
                 else if (comboBox1.SelectedIndex == 4)
                     Feld2 = "5KE.915.919.AB";
                 else if (comboBox1.SelectedIndex > 4)
@@ -946,6 +948,8 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";
                 if (packType == "C")//C
                     Feld2 = "5KE.915.588.A";
+                else if (packType == "B" || packType == "D")
+                    Feld2 = "5KE.915.598.B";
                 else if (packType == "E")//E
                     Feld2 = "5KE.915.919.AB";
                 else if (packType == "F")//F
@@ -1162,6 +1166,8 @@ namespace IDCodePrinter
                 string Feld2 = "5KE.915.588";//14
                 if (comboBox1.SelectedIndex == 2)
                     Feld2 = "5KE.915.588.A";
+                else if (comboBox1.SelectedIndex == 1 || comboBox1.SelectedIndex == 3)
+                    Feld2 = "5KE.915.598.B";
                 else if (comboBox1.SelectedIndex == 4)
                     Feld2 = "5KE.915.919.AB";
                 else if (comboBox1.SelectedIndex > 4)
