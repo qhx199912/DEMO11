@@ -287,6 +287,13 @@ namespace IDCodePrinter
                     //    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x04 });
                     //else
                     //    plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x03 });
+
+                    byte[] pack1sn = new byte[json["Pack1SN"].ToString().Length + 2];
+                    byte[] snarr = Encoding.ASCII.GetBytes(json["Pack1SN"].ToString());
+                    Buffer.BlockCopy(snarr, 0, pack1sn, 2, snarr.Length);
+                    pack1sn[0] = 20;
+                    pack1sn[1] = (byte)json["Pack1SN"].ToString().Length;
+                    plc.WriteBytes(DataType.DataBlock, 160, 118, pack1sn);
                 }
 
                 if (json["Pack2SN"].ToString() == "")
@@ -298,6 +305,13 @@ namespace IDCodePrinter
                     //    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x04 });
                     //else
                     //    plc.WriteBytes(DataType.DataBlock, 160, 116, new byte[] { 0x00, 0x03 });
+
+                    byte[] pack2sn = new byte[json["Pack2SN"].ToString().Length + 2];
+                    byte[] snarr = Encoding.ASCII.GetBytes(json["Pack2SN"].ToString());
+                    Buffer.BlockCopy(snarr, 0, pack2sn, 2, snarr.Length);
+                    pack2sn[0] = 20;
+                    pack2sn[1] = (byte)json["Pack1SN"].ToString().Length;
+                    plc.WriteBytes(DataType.DataBlock, 160, 138, pack2sn);
                 }
                 Logger.Info("step1-Type3->" + type);
                 plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, type });
@@ -463,6 +477,8 @@ namespace IDCodePrinter
                     }
 
                     Logger.Info("step6");
+
+                    step4T();//发送站完成信号
                 }
                 catch (Exception ex)
                 {
@@ -501,7 +517,7 @@ namespace IDCodePrinter
 
                 Logger.Info("step3");
 
-                step4T();//发送站完成信号
+                //step4T();//发送站完成信号
             }
             lastFlag3 = flag;
         }
