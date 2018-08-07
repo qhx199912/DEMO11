@@ -102,7 +102,7 @@ namespace IDCodePrinter
                     PostDataAPI postDataAPI = new PostDataAPI();
                     string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"R480\" }");
                     JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                    Logger.Info("站完成-1->" + getStr);
+                    //Logger.Info("480站完成-1->" + getStr);
                     if (getjson["AGVSN"].ToString() != "-1")
                     {
                         //JObject send = new JObject();
@@ -120,7 +120,7 @@ namespace IDCodePrinter
                         JObject send = new JObject();
                         send.Add("StationID", "R480");
                         getStr = postDataAPI.HttpPost("http://192.168.20.249:9997/AGVS/RequestAgvLeave", send.ToString());
-                        Logger.Info("站完成-2.2->" + getStr);
+                        Logger.Info("480站完成-2.2->" + getStr);
                         getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
 
                         if (getjson["ResultCode"].ToString() == "0")
@@ -219,7 +219,7 @@ namespace IDCodePrinter
                 }
                 catch(Exception ex)
                 {
-                    reSetPram();
+                    //reSetPram();
                     Logger.Debug(ex, "S7Thread");
                     Thread.Sleep(2000);
                 }
@@ -253,13 +253,14 @@ namespace IDCodePrinter
             {
                 //if (json == null)
                 //{
-                    reSetPram();
+                    //reSetPram();
                     try
                     {
                         PostDataAPI postDataAPI = new PostDataAPI();
                         string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
                         Logger.Info("step1->" + getStr);
-                        json2 = json = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        json = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        json2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                     }
                     catch (Exception ex)
                     {
@@ -362,7 +363,7 @@ namespace IDCodePrinter
             {
                 if (!flag)
                 {
-                    Logger.Info("step5-> 11");
+                    //Logger.Info("step5-> 11");
                     plc.WriteBytes(DataType.DataBlock, 160, 104, new byte[] { 0x00, 0x00 });
                 }
                 else
@@ -511,6 +512,54 @@ namespace IDCodePrinter
                 //send.Add("PackSN", packSN);
                 //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
 
+                PostDataAPI postDataAPI = new PostDataAPI();
+                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
+                JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                JObject send = new JObject();
+                if (getjson["Pack1SN"].ToString() == packSN)
+                {
+                    if (getjson["Pack1Status"].ToString() == "2")
+                    {
+                        send = new JObject();
+                        send.Add("AGVSN", getjson["AGVSN"].ToString());
+                        send.Add("PackSN", getjson["Pack1SN"].ToString());
+                        send.Add("Status", getjson["Pack1Status"].ToString());
+                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                        //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        Logger.Info("step3-UB1-NOK->" + getStr);
+                    }
+                    else
+                    {
+                        send.Add("AGVSN", getjson["AGVSN"].ToString());
+                        send.Add("PackSN", getjson["Pack1SN"].ToString());
+                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                        //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        Logger.Info("step3-UB1-OK->" + getStr);
+                    }
+                }
+                else
+                {
+                    if (getjson["Pack2Status"].ToString() == "2")
+                    {
+                        send = new JObject();
+                        send.Add("AGVSN", getjson["AGVSN"].ToString());
+                        send.Add("PackSN", getjson["Pack2SN"].ToString());
+                        send.Add("Status", getjson["Pack2Status"].ToString());
+                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                        //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        Logger.Info("step3-UB2-NOK->" + getStr);
+                    }
+                    else
+                    {
+                        send = new JObject();
+                        send.Add("AGVSN", getjson["AGVSN"].ToString());
+                        send.Add("PackSN", getjson["Pack2SN"].ToString());
+                        getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                        //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                        Logger.Info("step3-UB2-OK->" + getStr);
+                    }
+                }
+
                 packSNArr = packSN;//用于打印的电池包编号
 
                 plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x01 });
@@ -530,42 +579,42 @@ namespace IDCodePrinter
             {
                 //统一解绑
                 PostDataAPI postDataAPI = new PostDataAPI();
-                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
-                JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                //string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/getstatus/packstatus", "{ \"StationID\" : \"A490\" }");
+                //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 JObject send = new JObject();
-                send.Add("AGVSN", getjson["AGVSN"].ToString());
-                send.Add("PackSN", getjson["Pack1SN"].ToString());
-                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
-                //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                Logger.Info("step4T-1.1->" + getStr);
-                ////--------------------
-                if (getjson["Pack1Status"].ToString() == "2")
-                {
-                    send = new JObject();
-                    send.Add("AGVSN", getjson["AGVSN"].ToString());
-                    send.Add("PackSN", getjson["Pack1SN"].ToString());
-                    send.Add("Status", getjson["Pack1Status"].ToString());
-                    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
-                    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                }
+                //send.Add("AGVSN", getjson["AGVSN"].ToString());
+                //send.Add("PackSN", getjson["Pack1SN"].ToString());
+                //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                ////getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                //Logger.Info("step4T-1.1->" + getStr);
+                //////--------------------
+                //if (getjson["Pack1Status"].ToString() == "2")
+                //{
+                //    send = new JObject();
+                //    send.Add("AGVSN", getjson["AGVSN"].ToString());
+                //    send.Add("PackSN", getjson["Pack1SN"].ToString());
+                //    send.Add("Status", getjson["Pack1Status"].ToString());
+                //    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                //    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                //}
 
                 /////////////////////////////////////
-                send = new JObject();
-                send.Add("AGVSN", getjson["AGVSN"].ToString());
-                send.Add("PackSN", getjson["Pack2SN"].ToString());
-                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
-                //getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                Logger.Info("step4T-1.2->" + getStr);
-                ////--------------------
-                if (getjson["Pack2Status"].ToString() == "2")
-                {
-                    send = new JObject();
-                    send.Add("AGVSN", getjson["AGVSN"].ToString());
-                    send.Add("PackSN", getjson["Pack2SN"].ToString());
-                    send.Add("Status", getjson["Pack2Status"].ToString());
-                    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
-                    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
-                }
+                //send = new JObject();
+                //send.Add("AGVSN", getjson["AGVSN"].ToString());
+                //send.Add("PackSN", getjson["Pack2SN"].ToString());
+                //getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/ubinding/packandagv", send.ToString());
+                ////getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                //Logger.Info("step4T-1.2->" + getStr);
+                //////--------------------
+                //if (getjson["Pack2Status"].ToString() == "2")
+                //{
+                //    send = new JObject();
+                //    send.Add("AGVSN", getjson["AGVSN"].ToString());
+                //    send.Add("PackSN", getjson["Pack2SN"].ToString());
+                //    send.Add("Status", getjson["Pack2Status"].ToString());
+                //    getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/Order/OrderReline", send.ToString());
+                //    //getjson2 = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
+                //}
 
                 //写站完成 AGV放行
                 postDataAPI = new PostDataAPI();
@@ -578,14 +627,14 @@ namespace IDCodePrinter
                 send.Add("IsReturnRepair", false);
                 send.Add("Time", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
                 Logger.Info("step4T-2-Send->" + send.ToString());
-                getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
+                string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/stationstate", send.ToString());
                 //JObject getjson = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(getStr);
                 Logger.Info("step4T-2->" + getStr);
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
                 //plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x00 });
                 step5(true);
-                //reSetPram();
+                reSetPram();//复位
             }
 
             Logger.Info("step4T");
@@ -795,7 +844,7 @@ namespace IDCodePrinter
                 else if (comboBox1.SelectedIndex == 1 || comboBox1.SelectedIndex == 3)
                     Feld2 = "5KE.915.598.B";
                 else if (comboBox1.SelectedIndex == 4)
-                    Feld2 = "5KE.915.919.AB";
+                    Feld2 = "5KE.915.919.AC";
                 else if (comboBox1.SelectedIndex > 4)
                     Feld2 = "5KE.915.919.AA";
 
@@ -968,7 +1017,7 @@ namespace IDCodePrinter
                 else if (packType == "B" || packType == "D")
                     Feld2 = "5KE.915.598.B";
                 else if (packType == "E")//E
-                    Feld2 = "5KE.915.919.AB";
+                    Feld2 = "5KE.915.919.AC";
                 else if (packType == "F")//F
                     Feld2 = "5KE.915.919.AA";
 
@@ -1186,7 +1235,7 @@ namespace IDCodePrinter
                 else if (comboBox1.SelectedIndex == 1 || comboBox1.SelectedIndex == 3)
                     Feld2 = "5KE.915.598.B";
                 else if (comboBox1.SelectedIndex == 4)
-                    Feld2 = "5KE.915.919.AB";
+                    Feld2 = "5KE.915.919.AC";
                 else if (comboBox1.SelectedIndex > 4)
                     Feld2 = "5KE.915.919.AA";
 

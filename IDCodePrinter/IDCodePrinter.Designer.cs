@@ -222,7 +222,7 @@
             "037Ah Tiguan PHEV C6",
             "037Ah Passat PHEV C5",
             "037Ah Passat PHEV C6",
-            "099Ah BEV",
+            "099Ah Lavida BEV1.4 C3",
             "120Ah BEV"});
             this.comboBox1.Location = new System.Drawing.Point(347, 5);
             this.comboBox1.Name = "comboBox1";
