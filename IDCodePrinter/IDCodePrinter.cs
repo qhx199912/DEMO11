@@ -1139,7 +1139,7 @@ namespace IDCodePrinter
                 send.Add("StationID", "A490");
                 send.Add("PackSN", packSN);
                 send.Add("DataTime", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
-                send.Add("PartsCode", "-");//?
+                send.Add("PartsCode", Feld2);//?
                 send.Add("KeyCode", DataMatrixStr);
                 send.Add("LineID", "A490");
                 send.Add("PartsID", "-");//?
