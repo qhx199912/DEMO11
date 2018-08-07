@@ -214,7 +214,7 @@ namespace IDCodePrinter
                         step4F(readBuff[11] == 1);
                         step5(readBuff[5] == 1);
                         step6(readBuff[7] == 1);
-                        Logger.Info("1->" + readBuff[1] + "|3->" + readBuff[3] + "|9->" + readBuff[9] + "|11->" + readBuff[11] + "|5->" + readBuff[5] + "|7->" + readBuff[7]);
+                        //Logger.Info("1->" + readBuff[1] + "|3->" + readBuff[3] + "|9->" + readBuff[9] + "|11->" + readBuff[11] + "|5->" + readBuff[5] + "|7->" + readBuff[7]);
                     }
                 }
                 catch(Exception ex)
@@ -469,7 +469,7 @@ namespace IDCodePrinter
                             if (DMStr == DataMatrixStr && DataMatrixStr != "")
                             {
                                 plc.WriteBytes(DataType.DataBlock, 160, 106, new byte[] { 0x00, 0x01 });
-                                //reSetPram();
+                                step4T();//发送站完成信号
                                 break;
                             }
                             if (DMStr == "")
@@ -478,8 +478,6 @@ namespace IDCodePrinter
                     }
 
                     Logger.Info("step6");
-
-                    step4T();//发送站完成信号
                 }
                 catch (Exception ex)
                 {
