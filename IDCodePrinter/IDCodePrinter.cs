@@ -631,7 +631,7 @@ namespace IDCodePrinter
 
                 plc.WriteBytes(DataType.DataBlock, 160, 110, new byte[] { 0x00, 0x01 });
                 //plc.WriteBytes(DataType.DataBlock, 160, 108, new byte[] { 0x00, 0x00 });
-                step5(true);
+                //step5(true);
                 reSetPram();//复位
             }
 
@@ -1141,7 +1141,7 @@ namespace IDCodePrinter
                 send.Add("DataTime", DateTime.Now.ToString("yyyy-MM-dd HH:ss:mm"));
                 send.Add("PartsCode", Feld2);//?
                 send.Add("KeyCode", DataMatrixStr);
-                send.Add("LineID", "A490");
+                send.Add("LineID", "1");
                 send.Add("PartsID", "-");//?
                 Logger.Info("printTagAuto1->" + send.ToString());
                 string getStr = postDataAPI.HttpPost("http://192.168.20.250:51566/upload/Keybarcode", send.ToString());
