@@ -31,6 +31,7 @@ using System.Net.Sockets;
 namespace IDCodePrinter
 {
     delegate void printTagDelegate(string packSN, string BMC_Rev, string BMC_HW_Rev);
+    delegate void ShowPackSNDelegate(string packSN1, string packSN2);
     delegate bool PLCConnDelegate();
     public partial class IDCodePrinter : Form
     {
@@ -279,6 +280,10 @@ namespace IDCodePrinter
                     type = byte.Parse(json["Type"].ToString());
                 }
                 Logger.Info("step1-Type2->" + type);
+
+                Invoke(new ShowPackSNDelegate(ShowPackSN), new object[] { json["Pack1SN"].ToString(),
+                    json["Pack2SN"].ToString() });
+
                 if (json["Pack1SN"].ToString() == "")
                     plc.WriteBytes(DataType.DataBlock, 160, 114, new byte[] { 0x00, 0x00 });
                 else
@@ -337,6 +342,7 @@ namespace IDCodePrinter
                 {
                     if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x01 }) == ErrorCode.NoError)
                     {
+                        Logger.Info("step2->" + json2["Pack1SN"].ToString() + "->0x01");
                         packSN = json2["Pack1SN"].ToString();
                         json2["Pack1SN"] = "";
                     }
@@ -345,6 +351,7 @@ namespace IDCodePrinter
                 {
                     if (plc.WriteBytes(DataType.DataBlock, 160, 102, new byte[] { 0x00, 0x02 }) == ErrorCode.NoError)
                     {
+                        Logger.Info("step2->" + json2["Pack2SN"].ToString() + "->0x02");
                         packSN = json2["Pack2SN"].ToString();
                         json2["Pack2SN"] = "";
                     }
@@ -1495,6 +1502,12 @@ namespace IDCodePrinter
             {
                 Logger.Error(ex, "站完成按钮");
             }
+        }
+
+        void ShowPackSN(string PackSN1, string PackSN2)
+        {
+            textBox7.Text = PackSN1;
+            textBox6.Text = PackSN2;
         }
     }
 }

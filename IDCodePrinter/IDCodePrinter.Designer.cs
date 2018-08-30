@@ -49,6 +49,10 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox7 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // reportViewer1
@@ -136,7 +140,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 8);
+            this.label4.Location = new System.Drawing.Point(579, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 20;
@@ -144,7 +148,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(65, 5);
+            this.textBox4.Location = new System.Drawing.Point(632, 13);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(241, 21);
             this.textBox4.TabIndex = 19;
@@ -200,7 +204,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(12, 35);
+            this.label9.Location = new System.Drawing.Point(579, 43);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(47, 12);
             this.label9.TabIndex = 28;
@@ -208,7 +212,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(65, 32);
+            this.textBox5.Location = new System.Drawing.Point(632, 40);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(299, 21);
             this.textBox5.TabIndex = 27;
@@ -249,11 +253,49 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(12, 35);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(35, 12);
+            this.label11.TabIndex = 35;
+            this.label11.Text = "Pack2";
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(65, 32);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.ReadOnly = true;
+            this.textBox6.Size = new System.Drawing.Size(241, 21);
+            this.textBox6.TabIndex = 34;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(12, 8);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(35, 12);
+            this.label12.TabIndex = 33;
+            this.label12.Text = "Pack1";
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(65, 5);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(241, 21);
+            this.textBox7.TabIndex = 32;
+            // 
             // IDCodePrinter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(551, 591);
+            this.ClientSize = new System.Drawing.Size(548, 591);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.textBox6);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.textBox7);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.comboBox1);
@@ -308,6 +350,10 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox7;
     }
 }
 
