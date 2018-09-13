@@ -300,6 +300,24 @@ namespace IDCodePrinter
                     pack1sn[0] = 20;
                     pack1sn[1] = (byte)json["Pack1SN"].ToString().Length;
                     plc.WriteBytes(DataType.DataBlock, 160, 118, pack1sn);
+
+                    //写入Pack1零件号
+                    string packType = json["Pack1SN"].ToString().Substring(10, 1);
+                    string Feld2 = "5KE.915.588";
+                    if (packType == "C")//C
+                        Feld2 = "5KE.915.588.A";
+                    else if (packType == "B" || packType == "D")
+                        Feld2 = "5KE.915.598.B";
+                    else if (packType == "E")//E
+                        Feld2 = "5KE.915.919.AC";
+                    else if (packType == "F")//F
+                        Feld2 = "5KE.915.919.AA";
+                    pack1sn = new byte[Feld2.Length + 2];
+                    snarr = Encoding.ASCII.GetBytes(Feld2);
+                    Buffer.BlockCopy(snarr, 0, pack1sn, 2, snarr.Length);
+                    pack1sn[0] = 20;
+                    pack1sn[1] = (byte)Feld2.Length;
+                    plc.WriteBytes(DataType.DataBlock, 160, 158, pack1sn);
                 }
 
                 if (json["Pack2SN"].ToString() == "")
@@ -318,6 +336,24 @@ namespace IDCodePrinter
                     pack2sn[0] = 20;
                     pack2sn[1] = (byte)json["Pack1SN"].ToString().Length;
                     plc.WriteBytes(DataType.DataBlock, 160, 138, pack2sn);
+
+                    //写入Pack2零件号
+                    string packType = json["Pack2SN"].ToString().Substring(10, 1);
+                    string Feld2 = "5KE.915.588";
+                    if (packType == "C")
+                        Feld2 = "5KE.915.588.A";
+                    else if (packType == "B" || packType == "D")
+                        Feld2 = "5KE.915.598.B";
+                    else if (packType == "E")
+                        Feld2 = "5KE.915.919.AC";
+                    else if (packType == "F")
+                        Feld2 = "5KE.915.919.AA";
+                    pack2sn = new byte[Feld2.Length + 2];
+                    snarr = Encoding.ASCII.GetBytes(Feld2);
+                    Buffer.BlockCopy(snarr, 0, pack2sn, 2, snarr.Length);
+                    pack2sn[0] = 20;
+                    pack2sn[1] = (byte)Feld2.Length;
+                    plc.WriteBytes(DataType.DataBlock, 160, 158, pack2sn);
                 }
                 Logger.Info("step1-Type3->" + type);
                 plc.WriteBytes(DataType.DataBlock, 160, 100, new byte[] { 0x00, type });
