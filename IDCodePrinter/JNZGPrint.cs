@@ -47,6 +47,7 @@ namespace IDCodePrinter
                 SoftConfig.ProductName = System.Configuration.ConfigurationManager.AppSettings["ProductName"].ToString();
                 SoftConfig.HeatNo = System.Configuration.ConfigurationManager.AppSettings["HeatNo"].ToString();
                 SoftConfig.LastPlanNum = System.Configuration.ConfigurationManager.AppSettings["LastPlanNum"].ToString();
+                SoftConfig.UnitCode = System.Configuration.ConfigurationManager.AppSettings["UnitCode"].ToString();//机组代码
                 SoftConfig.SqlConnnection = System.Configuration.ConfigurationManager.AppSettings["SqlConntion"].ToString(); 
 
 

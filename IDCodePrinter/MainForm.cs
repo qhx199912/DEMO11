@@ -1,6 +1,7 @@
 ﻿using BaseCommon;
 using DBHelp;
 using IDCodePrinter;
+using LogR;
 using Newtonsoft.Json;
 using SqlSugar;
 using System;
@@ -25,6 +26,7 @@ namespace IDCodePrinter
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Logger.Info("程序开始...");
             //DGV.AutoGenerateColumns = false;
             Common._db =  new DBHelp.DBHelp(SoftConfig.SqlConnnection);
             //var sd = Common._db.Queryable<Model.t_weighact>();
@@ -129,7 +131,7 @@ namespace IDCodePrinter
             //    Thread.Sleep(10);
             //}
             #endregion
-            Thread.Sleep(10);
+            Thread.Sleep(100);
             DGV.DataSource = t_BaseDatasList;
         }
         private string LastDateTime = string.Empty;
@@ -138,37 +140,42 @@ namespace IDCodePrinter
         {
             try
             {
-               Model.t_weighact _Weighact = Common._db.Queryable<Model.t_weighact>().Where(r => r.MAT_ACT_WT > 0).OrderByDescending(r => r.INSERT_TIME).First();
-                if (_Weighact != null)
+                if (IsAutoPrint)
                 {
-                    if (LastDateTime != _Weighact.INSERT_TIME)
+                    Model.t_weighact _Weighact = Common._db.Queryable<Model.t_weighact>().Where(r => r.MAT_ACT_WT > 0&&r.UNIT_CODE==SoftConfig.UnitCode).OrderByDescending(r => r.INSERT_TIME).First();
+                    if (_Weighact != null)
                     {
-                        if(LastROLL_PLAN_NO!= _Weighact.ROLL_PLAN_NO)
+                        Logger.Info("_Start " + "当前的插表时刻：" + _Weighact.INSERT_TIME);
+                        Logger.Info("_Start " + "上次有效的插表时刻：" + LastDateTime);
+                        if (LastDateTime != _Weighact.INSERT_TIME)
                         {
-                            SoftConfig.RollPlanNo = jNPrinter.GetRollingNo();//轧制号
-                            SoftConfig.HeatNo = jNPrinter.GetHeatNo();
-                            SoftConfig.BudleNo = "7001";
-                        }
-                        else
-                        {
-                            SoftConfig.BudleNo = jNPrinter.GetBudleNo();
-                        }
-                        LastDateTime = _Weighact.INSERT_TIME;
-                        Model.BaseData baseData = new Model.BaseData();
-                        string weighJson = JsonConvert.SerializeObject(_Weighact);
-                        baseData = JsonConvert.DeserializeObject<Model.BaseData>(weighJson);
-                        baseData.NewROLLCode = SoftConfig.RollPlanNo;
-                        baseData.NewHEAT_NO = SoftConfig.HeatNo;
-                        baseData.NewHEATNo = Convert.ToInt32(SoftConfig.BudleNo);
-                        baseData.create_Time = DateTime.Parse($"{_Weighact.INSERT_TIME.Substring(0, 4)}/{_Weighact.INSERT_TIME.Substring(4, 2)}/{_Weighact.INSERT_TIME.Substring(6, 2)} {_Weighact.INSERT_TIME.Substring(8, 2)}:{_Weighact.INSERT_TIME.Substring(10, 2)}:{_Weighact.INSERT_TIME.Substring(12, 2)} ");
-                        t_BaseDatasList.Add(baseData);
-                        if (_Weighact.MAT_ACT_WT > 0)
-                        {
-                            double _W = Convert.ToDouble(_Weighact.MAT_ACT_WT * 1000);
-                            string _str = _W.ToString().Split('.').ToArray()[0];//重量信息
-                            jNPrinter.AutoPNGJNPrint(_Weighact.SG_SIGN, SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
-                               "10.0X0", _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
-                               "0", "0", "XK05-001-00042");
+                            if (LastROLL_PLAN_NO != _Weighact.ROLL_PLAN_NO)
+                            {
+                                SoftConfig.RollPlanNo = jNPrinter.GetRollingNo();//轧制号
+                                SoftConfig.HeatNo = jNPrinter.GetHeatNo();
+                                SoftConfig.BudleNo = "7001";
+                            }
+                            else
+                            {
+                                SoftConfig.BudleNo = jNPrinter.GetBudleNo();
+                            }
+                            LastDateTime = _Weighact.INSERT_TIME;
+                            Model.BaseData baseData = new Model.BaseData();
+                            string weighJson = JsonConvert.SerializeObject(_Weighact);
+                            baseData = JsonConvert.DeserializeObject<Model.BaseData>(weighJson);
+                            baseData.NewROLLCode = SoftConfig.RollPlanNo;
+                            baseData.NewHEAT_NO = SoftConfig.HeatNo;
+                            baseData.NewHEATNo = Convert.ToInt32(SoftConfig.BudleNo);
+                            baseData.create_Time = DateTime.Parse($"{_Weighact.INSERT_TIME.Substring(0, 4)}/{_Weighact.INSERT_TIME.Substring(4, 2)}/{_Weighact.INSERT_TIME.Substring(6, 2)} {_Weighact.INSERT_TIME.Substring(8, 2)}:{_Weighact.INSERT_TIME.Substring(10, 2)}:{_Weighact.INSERT_TIME.Substring(12, 2)} ");
+                            t_BaseDatasList.Add(baseData);
+                            if (_Weighact.MAT_ACT_WT > 0)
+                            {
+                                double _W = Convert.ToDouble(_Weighact.MAT_ACT_WT * 1000);
+                                string _str = _W.ToString().Split('.').ToArray()[0];//重量信息
+                                jNPrinter.AutoPNGJNPrint(_Weighact.SG_SIGN, SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
+                                   "10.0X0", _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                                   "0", "0", "XK05-001-00042");
+                            }
                         }
                     }
                 }
@@ -179,14 +186,15 @@ namespace IDCodePrinter
             }
         }
         private BindingList<Model.BaseData> t_BaseDatasList = new BindingList<Model.BaseData>();
+        private BindingList<Model.BaseData> New_BaseDatasList = new BindingList<Model.BaseData>();
 
         //private BindingList<Model.BaseData> t_BaseDataLsit = new BindingList<Model.BaseData>();
-         
 
-            //List<Model.t_weighact> t_WeighactsLsit = Common._db.Queryable<Model.t_weighact>()
-            //    .Where(r => long.Parse(r.INSERT_TIME) >= long.Parse(dateTimePicker1.Value.ToString("yyyyMMddHHmmss")) && long.Parse(r.INSERT_TIME) <= long.Parse(dateTimePicker2.Value.ToString("yyyyMMddHHmmss"))).ToList();
-            //string weighJson = JsonConvert.SerializeObject(t_WeighactsLsit);
-            //t_BaseDataLsit = JsonConvert.DeserializeObject<BindingList<Model.BaseData>>(weighJson);
+
+        //List<Model.t_weighact> t_WeighactsLsit = Common._db.Queryable<Model.t_weighact>()
+        //    .Where(r => long.Parse(r.INSERT_TIME) >= long.Parse(dateTimePicker1.Value.ToString("yyyyMMddHHmmss")) && long.Parse(r.INSERT_TIME) <= long.Parse(dateTimePicker2.Value.ToString("yyyyMMddHHmmss"))).ToList();
+        //string weighJson = JsonConvert.SerializeObject(t_WeighactsLsit);
+        //t_BaseDataLsit = JsonConvert.DeserializeObject<BindingList<Model.BaseData>>(weighJson);
 
         JNZGPrint jNPrinter = new JNZGPrint();
         private void btnPrint_Click(object sender, EventArgs e)
@@ -219,6 +227,11 @@ namespace IDCodePrinter
                 IsAutoPrint = false;
 
             }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Logger.Info("程序关闭...");
         }
     }
 }

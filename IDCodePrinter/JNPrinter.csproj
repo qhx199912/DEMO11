@@ -209,6 +209,10 @@
       <Project>{c67972ca-4fe5-4825-b3d4-6c88937fc4ad}</Project>
       <Name>DBHelp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LogR\LogR.csproj">
+      <Project>{76ea5f5a-07fd-403f-b901-ee185e728bbc}</Project>
+      <Name>LogR</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{c4d537cd-50f6-4cc0-bda1-651754a1f46a}</Project>
       <Name>Model</Name>

@@ -22,5 +22,7 @@ namespace IDCodePrinter
         public static string LastPlanNum { get; set; }//上一个计划号
 
         public static string RollPlanNo { get; set; }//当前所用轧制号
+
+        public static string UnitCode { get; set; }//机组代码D103,代表A线，D104代表B线
     }
 }
