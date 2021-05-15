@@ -19,6 +19,7 @@ using Code39Writer = com.google.zxing.oned.Code39Writer;
 using System.Windows.Forms;
 using ThoughtWorks.QRCode.Codec;
 using System.Drawing.Printing;
+using System.Threading;
 
 namespace IDCodePrinter
 {
@@ -48,9 +49,8 @@ namespace IDCodePrinter
                 SoftConfig.HeatNo = System.Configuration.ConfigurationManager.AppSettings["HeatNo"].ToString();
                 SoftConfig.LastPlanNum = System.Configuration.ConfigurationManager.AppSettings["LastPlanNum"].ToString();
                 SoftConfig.UnitCode = System.Configuration.ConfigurationManager.AppSettings["UnitCode"].ToString();//机组代码
+                SoftConfig.Specifications= System.Configuration.ConfigurationManager.AppSettings["Specifications"].ToString();
                 SoftConfig.SqlConnnection = System.Configuration.ConfigurationManager.AppSettings["SqlConntion"].ToString(); 
-
-
             }
             catch (Exception ex)
             {
@@ -228,8 +228,8 @@ namespace IDCodePrinter
                     DStatus = SoftConfig.DStatus;//热轧
                     ProductName = SoftConfig.ProductName;//钢筋混凝
                     report.ReportPath = @".\Report\Report3.rdlc";
-                    //Image img = Encode_Code_39("wwww"+DateTime.Now.ToString("yyyyMMddHHmmss"));//SVWPEA1AB5A001B5A0000001
-                    Image img = Encode_Code_128(DataMatrixStr);
+                    //Image img = Encode_Code_128(DataMatrixStr);
+                    Image img = Encode_Code_39(BottomData);
                     Bitmap imgBit = new Bitmap(img);
                     byte[] imgBytes = BitmapToBytes(imgBit);
 
@@ -305,6 +305,8 @@ namespace IDCodePrinter
                         }
                     }
                     pd.Print();
+                    Thread.Sleep(100);
+                    pd.Print();//钢厂要求每次都打印两张
                 }
             }
             catch (Exception ex)

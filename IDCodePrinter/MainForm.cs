@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,6 +32,7 @@ namespace IDCodePrinter
             Common._db =  new DBHelp.DBHelp(SoftConfig.SqlConnnection);
             //var sd = Common._db.Queryable<Model.t_weighact>();
             timer1.Start();
+            DeletePng();//定时删除超过一天的照片
         }
         private Dictionary<string, PlateConfig> PlateDiction { get; set; }
 
@@ -142,12 +144,13 @@ namespace IDCodePrinter
             {
                 if (IsAutoPrint)
                 {
-                    Model.t_weighact _Weighact = Common._db.Queryable<Model.t_weighact>().Where(r => r.MAT_ACT_WT > 0&&r.UNIT_CODE==SoftConfig.UnitCode).OrderByDescending(r => r.INSERT_TIME).First();
+                    //Model.t_weighact _Weighact = Common._db.Queryable<Model.t_weighact>().Where(r => r.MAT_ACT_WT > 0&&r.UNIT_CODE==SoftConfig.UnitCode).OrderByDescending(r => r.INSERT_TIME).First();
+                    Model.t_weighact _Weighact = Common._db.Queryable<Model.t_weighact>().Where(r => r.MAT_ACT_WT > 0 && r.UNIT_CODE == SoftConfig.UnitCode).OrderByDescending(r => r.PROD_TIME).First();
                     if (_Weighact != null)
                     {
-                        Logger.Info("_Start " + "当前的插表时刻：" + _Weighact.INSERT_TIME);
+                        Logger.Info("_Start " + "当前的插表时刻：" + _Weighact.PROD_TIME);
                         Logger.Info("_Start " + "上次有效的插表时刻：" + LastDateTime);
-                        if (LastDateTime != _Weighact.INSERT_TIME)
+                        if (LastDateTime != _Weighact.PROD_TIME)
                         {
                             if (LastROLL_PLAN_NO != _Weighact.ROLL_PLAN_NO)
                             {
@@ -159,7 +162,7 @@ namespace IDCodePrinter
                             {
                                 SoftConfig.BudleNo = jNPrinter.GetBudleNo();
                             }
-                            LastDateTime = _Weighact.INSERT_TIME;
+                            LastDateTime = _Weighact.PROD_TIME;
                             Model.BaseData baseData = new Model.BaseData();
                             string weighJson = JsonConvert.SerializeObject(_Weighact);
                             baseData = JsonConvert.DeserializeObject<Model.BaseData>(weighJson);
@@ -172,8 +175,10 @@ namespace IDCodePrinter
                             {
                                 double _W = Convert.ToDouble(_Weighact.MAT_ACT_WT * 1000);
                                 string _str = _W.ToString().Split('.').ToArray()[0];//重量信息
+                                //if (_Weighact.MAT_ACT_THICK != null)
+                                //    SoftConfig.Specifications = _Weighact.MAT_ACT_THICK.ToString() + ".0X0";
                                 jNPrinter.AutoPNGJNPrint(_Weighact.SG_SIGN, SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
-                                   "10.0X0", _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                                   SoftConfig.Specifications, _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
                                    "0", "0", "XK05-001-00042");
                             }
                         }
@@ -202,8 +207,12 @@ namespace IDCodePrinter
             foreach (var item in t_BaseDatasList.Where(r=>r.status))
             {
                 item.Print_Time = DateTime.Now;
+                double _W = Convert.ToDouble(item.MAT_ACT_WT * 1000);
+                string _str = _W.ToString().Split('.').ToArray()[0];//重量信息
+                //if (item.MAT_ACT_THICK != null)
+                //    SoftConfig.Specifications = item.MAT_ACT_THICK.ToString() + ".0X0";
                 jNPrinter.AutoPNGJNPrint(item.SG_SIGN, item.NewHEAT_NO.Trim(), item.NewROLLCode.Trim(), item.NewHEATNo.ToString(),
-                              "8.0X00", item.MAT_ACT_WT.ToString().Trim(), "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                              SoftConfig.Specifications, _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
                               "0", "0", "XK05-001-00042");
             }
         }
@@ -232,6 +241,41 @@ namespace IDCodePrinter
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Logger.Info("程序关闭...");
+        }
+
+        private void DeletePng()
+        {
+            Thread t = new Thread(StartDelete);
+            t.IsBackground = true;
+            t.Start();
+        }
+        private void StartDelete()
+        {
+            while (true)
+            {
+                try
+                {
+                    string Path= Application.StartupPath;
+                    DirectoryInfo fdir = new DirectoryInfo(Path);
+                    FileInfo[] file = fdir.GetFiles();
+                    foreach(FileInfo file1 in file)
+                    {
+                        if(file1.Extension == ".png")
+                        {
+                            DateTime NowTime = DateTime.Now;
+                            if ((NowTime - file1.CreationTime).TotalDays >= 1)
+                            {
+                                file1.Delete();
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                Thread.Sleep(10000);
+            }
         }
     }
 }
