@@ -178,7 +178,7 @@ namespace IDCodePrinter
                                 //if (_Weighact.MAT_ACT_THICK != null)
                                 //    SoftConfig.Specifications = _Weighact.MAT_ACT_THICK.ToString() + ".0X0";
                                 jNPrinter.AutoPNGJNPrint(/*_Weighact.SG_SIGN*/ "HRB400E", SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
-                                   SoftConfig.Specifications, _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                                   SoftConfig.Specifications, _str, "GB/T1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
                                    "0", "0", "XK05-001-00042");
                             }
                         }
@@ -212,7 +212,7 @@ namespace IDCodePrinter
                 //if (item.MAT_ACT_THICK != null)
                 //    SoftConfig.Specifications = item.MAT_ACT_THICK.ToString() + ".0X0";
                 jNPrinter.AutoPNGJNPrint(/*item.SG_SIGN*/ "HRB400E", item.NewHEAT_NO.Trim(), item.NewROLLCode.Trim(), item.NewHEATNo.ToString(),
-                              SoftConfig.Specifications, _str, "GB/T 1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                              SoftConfig.Specifications, _str, "GB/T1499.2-2018".Replace("0","o"), DateTime.Now.ToString("yyyyMMdd"),
                               "0", "0", "XK05-001-00042");
             }
         }
