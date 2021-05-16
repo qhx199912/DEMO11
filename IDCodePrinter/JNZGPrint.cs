@@ -85,7 +85,7 @@ namespace IDCodePrinter
                     report.ReportPath = @".\Report\Report2.rdlc";
                     //Image img = Encode_Code_39("wwww"+DateTime.Now.ToString("yyyyMMddHHmmss"));//SVWPEA1AB5A001B5A0000001
                     //Image img = Encode_Code_39(DateTime.Now.ToString("yyyyMMddHHmmss"));
-                    Image img = Encode_Code_128(DataMatrixStr);
+                    Image img = Encode_Code_39(DataMatrixStr);
                     Bitmap imgBit = new Bitmap(img);
                     byte[] imgBytes = BitmapToBytes(imgBit);
 
@@ -317,7 +317,7 @@ namespace IDCodePrinter
         public static Bitmap Encode_Code_39(string content)
         {
             Code39Writer ean8w = new Code39Writer();
-            ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.CODE_39, 300, 38);
+            ByteMatrix byteMatrix = ean8w.encode(content, BarcodeFormat.CODE_39, 400, 38);
             Bitmap bitmap = ByteMatrixToBitmap(byteMatrix);
             return bitmap;
         }

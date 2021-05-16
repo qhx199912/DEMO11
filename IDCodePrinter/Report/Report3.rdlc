@@ -14,7 +14,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter9.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -48,7 +48,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter10.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -58,7 +58,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>6.65654cm</Top>
-            <Left>3.13903cm</Left>
+            <Left>2.67973cm</Left>
             <Height>1.17326cm</Height>
             <Width>17.71246cm</Width>
             <ZIndex>1</ZIndex>
@@ -116,7 +116,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter6.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -127,8 +127,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>3.09863cm</Top>
-            <Left>3.40362cm</Left>
+            <Top>3.41613cm</Top>
+            <Left>2.67973cm</Left>
             <Height>1.06743cm</Height>
             <Width>9.24152cm</Width>
             <ZIndex>3</ZIndex>
@@ -149,8 +149,8 @@
             <Sizing>Fit</Sizing>
             <Top>8.45598cm</Top>
             <Left>17.83045cm</Left>
-            <Height>3.90229cm</Height>
-            <Width>3.65604cm</Width>
+            <Height>4.52604cm</Height>
+            <Width>3.68833cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -178,8 +178,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>1.58995cm</Top>
-            <Left>3.40362cm</Left>
+            <Top>1.90745cm</Top>
+            <Left>2.67973cm</Left>
             <Height>1.12063cm</Height>
             <Width>9.24152cm</Width>
             <ZIndex>5</ZIndex>
@@ -202,7 +202,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter7.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -249,9 +249,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>15.91944cm</Top>
-            <Left>4.32966cm</Left>
+            <Left>3.36021cm</Left>
             <Height>0.42253cm</Height>
-            <Width>12.13498cm</Width>
+            <Width>10.07123cm</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -268,10 +268,10 @@
             <Value>=System.Convert.FromBase64String(Parameters!ReportParameter1.Value)</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
-            <Top>15.13382cm</Top>
-            <Left>2.77813cm</Left>
-            <Height>0.78562cm</Height>
-            <Width>14.32151cm</Width>
+            <Top>14.97507cm</Top>
+            <Left>2.91042cm</Left>
+            <Height>0.94437cm</Height>
+            <Width>11.05019cm</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -288,19 +288,19 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter11.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Left</TextAlign>
+                  <TextAlign>General</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>8.32369cm</Top>
-            <Left>2.77813cm</Left>
+            <Left>2.20556cm</Left>
             <Height>1.21709cm</Height>
             <Width>13.68651cm</Width>
             <ZIndex>9</ZIndex>
@@ -321,7 +321,7 @@
                     <Value>=Parameters!ReportParameter13.Value</Value>
                     <Style>
                       <FontFamily>宋体</FontFamily>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -333,7 +333,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>11.72253cm</Top>
-            <Left>2.77813cm</Left>
+            <Left>2.20556cm</Left>
             <Height>0.96845cm</Height>
             <Width>13.68651cm</Width>
             <ZIndex>10</ZIndex>
@@ -353,7 +353,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter14.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -365,7 +365,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>13.34432cm</Top>
-            <Left>2.77813cm</Left>
+            <Left>2.20556cm</Left>
             <Height>0.98693cm</Height>
             <Width>14.37443cm</Width>
             <ZIndex>11</ZIndex>
@@ -385,7 +385,7 @@
                   <TextRun>
                     <Value>=Parameters!ReportParameter8.Value</Value>
                     <Style>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -397,7 +397,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>4.72168cm</Top>
-            <Left>3.72112cm</Left>
+            <Left>3.08612cm</Left>
             <Height>1.14993cm</Height>
             <Width>8.02444cm</Width>
             <ZIndex>12</ZIndex>
@@ -418,7 +418,7 @@
                     <Value>=Parameters!ReportParameter12.Value</Value>
                     <Style>
                       <FontFamily>宋体</FontFamily>
-                      <FontSize>30pt</FontSize>
+                      <FontSize>31pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -430,7 +430,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox25</rd:DefaultName>
             <Top>10.0971cm</Top>
-            <Left>2.77813cm</Left>
+            <Left>2.20556cm</Left>
             <Height>0.92058cm</Height>
             <Width>13.68651cm</Width>
             <ZIndex>13</ZIndex>
