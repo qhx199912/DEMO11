@@ -422,27 +422,32 @@ namespace IDCodePrinter
         /// <returns>轧制号</returns>
         static  string line = "C";//南钢产线代码
         static  string Product = "1";//南钢给晋南生产线的代码
-        static  string Order = "0001";
+        public static  string Order = "0002";
         
-        static int Rolling = 1;
-        public  string GetRollingNo()
+        public static int Rolling = 03;
+        public string GetRollingNo(bool flag)
         {
             string Result = string.Empty;
             try
             {
-                string Year = DateTime.Now.Year.ToString().Substring(3, 1);
-                if (Rolling > 99)
+                if (flag)
                 {
-                    Rolling = 1;
-                    int _order = Convert.ToInt32(Order) + 1;
-                    Order = _order.ToString().PadLeft(4,'0');
+                    string Year = DateTime.Now.Year.ToString().Substring(3, 1);
+                    if (Rolling >= 99)
+                    {
+                        Rolling = 1;
+                        //int _order = Convert.ToInt32(Order) + 1;
+                        //Order = _order.ToString().PadLeft(4, '0');
+                    }
+                    else
+                    {
+                        Rolling += 1;
+                    }
+                    Result = line + Year + Product + Order + Rolling.ToString().PadLeft(2, '0');
+                    SoftConfig.RollPlanNo = Result;
                 }
                 else
-                {
-                    Rolling += 1;
-                }
-                Result = line + Year + Product + Order + Rolling.ToString().PadLeft(2,'0');
-                SoftConfig.RollPlanNo = Result;
+                    Result = SoftConfig.RollPlanNo;
             }
             catch (Exception ex)
             {
@@ -454,7 +459,8 @@ namespace IDCodePrinter
         /// 
         /// </summary>
         /// <returns>炉号</returns>
-        public   string GetHeatNo()
+        public static string _h = "97102";
+        public string GetHeatNo(bool flag)
         {
             string Result = string.Empty;
             try
@@ -462,10 +468,17 @@ namespace IDCodePrinter
                 string Data = string.Empty;
                 string Year = DateTime.Now.Year.ToString().Substring(2, 2);
                 string NG = "6";
-                if (Convert.ToInt32(SoftConfig.HeatNo) > 99999)
-                    SoftConfig.HeatNo = "97001";
-                SoftConfig.HeatNo = (Convert.ToInt32(SoftConfig.HeatNo) + 1).ToString();//每使用一次加一个
-                string Heat = SoftConfig.HeatNo;
+                //if (Convert.ToInt32(SoftConfig.HeatNo) > 99999)
+                //    SoftConfig.HeatNo = "97001";
+                if (flag)
+                {
+                    if (_h.Contains("99"))
+                        _h = (Convert.ToInt32(_h) + 2).ToString();//每使用一次加一个
+                    else
+                        _h = (Convert.ToInt32(_h) + 1).ToString();//每使用一次加一个
+                }
+
+                string Heat = _h;
                 Result = Year + NG + Heat;
             }
             catch (Exception ex)
@@ -479,22 +492,13 @@ namespace IDCodePrinter
         /// </summary>
         /// <param name="Plan计划号"></param>
         /// <returns>捆号</returns>
-        public   string GetBudleNo(/*string Plan*/)
+        public string GetBudleNo(int buff)
         {
             string Result = string.Empty;
             try
             {
-                //if (Plan != SoftConfig.LastPlanNum)
-                //{
-                //    SoftConfig.BudleNo = "7001";
-                //    Result = SoftConfig.BudleNo;
-                //}
-                //else
-                //{
                 Result = (Convert.ToInt32(SoftConfig.BudleNo) + 1).ToString();
                 SoftConfig.BudleNo = Result;//原来数量上加一捆
-                //}
-                //SoftConfig.LastPlanNum = Plan;
             }
             catch (Exception ex)
             {

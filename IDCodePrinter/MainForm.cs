@@ -152,16 +152,33 @@ namespace IDCodePrinter
                         Logger.Info("_Start " + "上次有效的插表时刻：" + LastDateTime);
                         if (LastDateTime != _Weighact.PROD_TIME)
                         {
-                            if (LastROLL_PLAN_NO != _Weighact.ROLL_PLAN_NO)
-                            {
-                                SoftConfig.RollPlanNo = jNPrinter.GetRollingNo();//轧制号
-                                SoftConfig.HeatNo = jNPrinter.GetHeatNo();
-                                SoftConfig.BudleNo = "7001";
-                            }
-                            else
-                            {
-                                SoftConfig.BudleNo = jNPrinter.GetBudleNo();
-                            }
+                            SoftConfig.buff++;
+
+                            SoftConfig.BudleNo = jNPrinter.GetBudleNo(SoftConfig.buff);
+                            txtBule.Text = SoftConfig.BudleNo.ToString();
+                            //if (SoftConfig.buff >= SoftConfig.MaxBult+ 2 - SoftConfig.BuleStart)
+                            //{
+                            //    SoftConfig.BudleNo = "7001";
+                            //    SoftConfig.buff = 1;
+                            //}
+
+                            //SoftConfig.RollPlanNo = jNPrinter.GetRollingNo(SoftConfig.buff == 1);//轧制号
+                            //SoftConfig.HeatNo = jNPrinter.GetHeatNo(SoftConfig.buff == 1);
+                            SoftConfig.RollPlanNo = txtR.Text;
+                            SoftConfig.HeatNo = txtF.Text;
+                            //SoftConfig.BudleNo = "7001";
+                            //SoftConfig.BudleNo = jNPrinter.GetBudleNo(SoftConfig.buff);
+
+                            //if (LastROLL_PLAN_NO != _Weighact.ROLL_PLAN_NO)
+                            //{
+                            //    SoftConfig.RollPlanNo = jNPrinter.GetRollingNo(SoftConfig.buff == 1);//轧制号
+                            //    SoftConfig.HeatNo = jNPrinter.GetHeatNo();
+                            //    SoftConfig.BudleNo = "7001";
+                            //}
+                            //else
+                            //{
+                            //    SoftConfig.BudleNo = jNPrinter.GetBudleNo();
+                            //}
                             LastDateTime = _Weighact.PROD_TIME;
                             Model.BaseData baseData = new Model.BaseData();
                             string weighJson = JsonConvert.SerializeObject(_Weighact);
@@ -171,13 +188,17 @@ namespace IDCodePrinter
                             baseData.NewHEATNo = Convert.ToInt32(SoftConfig.BudleNo);
                             baseData.create_Time = DateTime.Parse($"{_Weighact.INSERT_TIME.Substring(0, 4)}/{_Weighact.INSERT_TIME.Substring(4, 2)}/{_Weighact.INSERT_TIME.Substring(6, 2)} {_Weighact.INSERT_TIME.Substring(8, 2)}:{_Weighact.INSERT_TIME.Substring(10, 2)}:{_Weighact.INSERT_TIME.Substring(12, 2)} ");
                             t_BaseDatasList.Add(baseData);
+                            SoftConfig.Specifications = cmbSpec.Text;
                             if (_Weighact.MAT_ACT_WT > 0)
                             {
                                 double _W = Convert.ToDouble(_Weighact.MAT_ACT_WT * 1000);
                                 string _str = _W.ToString().Split('.').ToArray()[0];//重量信息
-                                //if (_Weighact.MAT_ACT_THICK != null)
-                                //    SoftConfig.Specifications = _Weighact.MAT_ACT_THICK.ToString() + ".0X0";
-                                jNPrinter.AutoPNGJNPrint(/*_Weighact.SG_SIGN*/ "HRB400E", SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
+
+                                //jNPrinter.AutoPNGJNPrint(/*_Weighact.SG_SIGN*/ "HRB400E", SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
+                                //   SoftConfig.Specifications, _str, "GB/T1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
+                                //   "0", "0", "XK05-001-00042");
+
+                                jNPrinter.AutoPNGJNPrint(cmbGrade.Text, SoftConfig.HeatNo.Trim(), SoftConfig.RollPlanNo.Trim(), SoftConfig.BudleNo,
                                    SoftConfig.Specifications, _str, "GB/T1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
                                    "0", "0", "XK05-001-00042");
                             }
@@ -212,7 +233,7 @@ namespace IDCodePrinter
                 //if (item.MAT_ACT_THICK != null)
                 //    SoftConfig.Specifications = item.MAT_ACT_THICK.ToString() + ".0X0";
                 jNPrinter.AutoPNGJNPrint(/*item.SG_SIGN*/ "HRB400E", item.NewHEAT_NO.Trim(), item.NewROLLCode.Trim(), item.NewHEATNo.ToString(),
-                              SoftConfig.Specifications, _str, "GB/T1499.2-2018".Replace("0","o"), DateTime.Now.ToString("yyyyMMdd"),
+                              SoftConfig.Specifications, _str, "GB/T1499.2-2018", DateTime.Now.ToString("yyyyMMdd"),
                               "0", "0", "XK05-001-00042");
             }
         }
@@ -276,6 +297,43 @@ namespace IDCodePrinter
                 }
                 Thread.Sleep(10000);
             }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            MessageBoxButtons messButton = MessageBoxButtons.OKCancel;
+            DialogResult dr = MessageBox.Show("确定使用该参数?", "警告", messButton);
+
+            if (dr == DialogResult.OK)//如果点击“确定”按钮
+            {
+                //JNZGPrint._h = (Convert.ToInt32(txtF.Text)-1).ToString();
+                //JNZGPrint.Rolling = Convert.ToInt32(txtR.Text);
+                //JNZGPrint.Order = txtOrder.Text;
+                //SoftConfig.BuleStart = Convert.ToInt32(txtBule.Text) - 1;
+                if (SoftConfig.b)
+                {
+                    SoftConfig.BuleStart = 7000;
+                    txtBule.Text = "7001";
+                }
+                else
+                    SoftConfig.BuleStart = Convert.ToInt32(txtBule.Text) - 1;
+
+                SoftConfig.b = false;
+
+                SoftConfig.MaxBult = 999;
+                SoftConfig.buff = 0;
+                SoftConfig.BudleNo = SoftConfig.BuleStart.ToString();
+            }
+        }
+
+        private void txtF_TextChanged(object sender, EventArgs e)
+        {
+            SoftConfig.b = true;
+        }
+
+        private void txtBule_TextChanged(object sender, EventArgs e)
+        {
+            SoftConfig.b = false;
         }
     }
 }

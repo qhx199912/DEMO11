@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace Citizen_Label_sample_CS
+{
+    static class Program
+    {
+        /// <summary>
+        /// アプリケーションのメイン エントリ ポイントです。
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            bool createNew;
+            using (System.Threading.Mutex mutex = new System.Threading.Mutex(true, Application.ProductName, out createNew))
+            {
+                if (createNew)
+                {
+                    Application.Run(new MainFrm());
+                }
+                else
+                {
+                    MessageBox.Show("程序已启动，请勿重复打开");
+                    System.Threading.Thread.Sleep(1000);
+                    System.Environment.Exit(1);
+                }
+            }
+        }
+    }
+}

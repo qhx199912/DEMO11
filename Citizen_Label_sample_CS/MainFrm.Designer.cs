@@ -1,16 +1,16 @@
-﻿namespace IDCodePrinter
+﻿namespace Citizen_Label_sample_CS
 {
-    partial class MainForm
+    partial class MainFrm
     {
         /// <summary>
-        /// 必需的设计器变量。
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// 清理所有正在使用的资源。
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,21 +20,28 @@
             base.Dispose(disposing);
         }
 
-        #region Windows 窗体设计器生成的代码
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// 设计器支持所需的方法 - 不要修改
-        /// 使用代码编辑器修改此方法的内容。
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.btnQuery = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtR = new System.Windows.Forms.TextBox();
+            this.txtF = new System.Windows.Forms.TextBox();
+            this.cmbGrade = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.btnAutoPrint = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
+            this.btnQuery = new System.Windows.Forms.Button();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.txtBule = new System.Windows.Forms.TextBox();
+            this.btnOK = new System.Windows.Forms.Button();
             this.DGV = new System.Windows.Forms.DataGridView();
             this.Column17 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column21 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,77 +67,157 @@
             this.Column18 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column19 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnAutoPrint = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.cmbGrade = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtR = new System.Windows.Forms.TextBox();
-            this.txtF = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtBule = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer();
             this.cmbSpec = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).BeginInit();
             this.SuspendLayout();
             // 
-            // timer1
+            // label6
             // 
-            this.timer1.Interval = 30000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(1199, 16);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(82, 15);
+            this.label6.TabIndex = 45;
+            this.label6.Text = "当前捆包号";
             // 
-            // dateTimePicker1
+            // label2
             // 
-            this.dateTimePicker1.CustomFormat = "yyyy年MM月dd日 HH:mm:ss";
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(55, 17);
-            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(182, 21);
-            this.dateTimePicker1.TabIndex = 0;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1017, 16);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 15);
+            this.label2.TabIndex = 44;
+            this.label2.Text = "初始炉号";
             // 
-            // btnQuery
+            // txtR
             // 
-            this.btnQuery.Location = new System.Drawing.Point(437, 17);
-            this.btnQuery.Margin = new System.Windows.Forms.Padding(2);
-            this.btnQuery.Name = "btnQuery";
-            this.btnQuery.Size = new System.Drawing.Size(65, 22);
-            this.btnQuery.TabIndex = 1;
-            this.btnQuery.Text = "查找";
-            this.btnQuery.UseVisualStyleBackColor = true;
-            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
+            this.txtR.Location = new System.Drawing.Point(1091, 41);
+            this.txtR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtR.Name = "txtR";
+            this.txtR.Size = new System.Drawing.Size(97, 25);
+            this.txtR.TabIndex = 43;
+            this.txtR.Text = "C11000217";
+            // 
+            // txtF
+            // 
+            this.txtF.Location = new System.Drawing.Point(1091, 11);
+            this.txtF.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtF.Name = "txtF";
+            this.txtF.Size = new System.Drawing.Size(97, 25);
+            this.txtF.TabIndex = 42;
+            this.txtF.Text = "21697116";
+            this.txtF.TextChanged += new System.EventHandler(this.txtF_TextChanged);
+            // 
+            // cmbGrade
+            // 
+            this.cmbGrade.FormattingEnabled = true;
+            this.cmbGrade.Items.AddRange(new object[] {
+            "HRB400E",
+            "HRB400"});
+            this.cmbGrade.Location = new System.Drawing.Point(885, 11);
+            this.cmbGrade.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbGrade.Name = "cmbGrade";
+            this.cmbGrade.Size = new System.Drawing.Size(91, 23);
+            this.cmbGrade.TabIndex = 41;
+            this.cmbGrade.Text = "HRB400E";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(843, 16);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(37, 15);
+            this.label7.TabIndex = 40;
+            this.label7.Text = "牌号";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 22);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(11, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 12);
-            this.label1.TabIndex = 2;
+            this.label1.Size = new System.Drawing.Size(37, 15);
+            this.label1.TabIndex = 39;
             this.label1.Text = "时间";
+            // 
+            // btnAutoPrint
+            // 
+            this.btnAutoPrint.Location = new System.Drawing.Point(745, 14);
+            this.btnAutoPrint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAutoPrint.Name = "btnAutoPrint";
+            this.btnAutoPrint.Size = new System.Drawing.Size(87, 28);
+            this.btnAutoPrint.TabIndex = 36;
+            this.btnAutoPrint.Text = "自动打印";
+            this.btnAutoPrint.UseVisualStyleBackColor = true;
+            this.btnAutoPrint.Click += new System.EventHandler(this.btnAutoPrint_Click);
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.Location = new System.Drawing.Point(659, 14);
+            this.btnPrint.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(87, 28);
+            this.btnPrint.TabIndex = 37;
+            this.btnPrint.Text = "打印";
+            this.btnPrint.UseVisualStyleBackColor = true;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
+            // btnQuery
+            // 
+            this.btnQuery.Location = new System.Drawing.Point(572, 14);
+            this.btnQuery.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnQuery.Name = "btnQuery";
+            this.btnQuery.Size = new System.Drawing.Size(87, 28);
+            this.btnQuery.TabIndex = 38;
+            this.btnQuery.Text = "查找";
+            this.btnQuery.UseVisualStyleBackColor = true;
+            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
             // 
             // dateTimePicker2
             // 
             this.dateTimePicker2.CustomFormat = "yyyy年MM月dd日 HH:mm:ss";
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(241, 17);
-            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker2.Location = new System.Drawing.Point(311, 14);
+            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(182, 21);
-            this.dateTimePicker2.TabIndex = 0;
+            this.dateTimePicker2.Size = new System.Drawing.Size(241, 25);
+            this.dateTimePicker2.TabIndex = 34;
             // 
-            // btnPrint
+            // dateTimePicker1
             // 
-            this.btnPrint.Location = new System.Drawing.Point(502, 17);
-            this.btnPrint.Margin = new System.Windows.Forms.Padding(2);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(65, 22);
-            this.btnPrint.TabIndex = 1;
-            this.btnPrint.Text = "打印";
-            this.btnPrint.UseVisualStyleBackColor = true;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            this.dateTimePicker1.CustomFormat = "yyyy年MM月dd日 HH:mm:ss";
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePicker1.Location = new System.Drawing.Point(63, 14);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(241, 25);
+            this.dateTimePicker1.TabIndex = 35;
+            // 
+            // txtBule
+            // 
+            this.txtBule.Location = new System.Drawing.Point(1293, 11);
+            this.txtBule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtBule.Name = "txtBule";
+            this.txtBule.Size = new System.Drawing.Size(73, 25);
+            this.txtBule.TabIndex = 47;
+            this.txtBule.Text = "7001";
+            this.txtBule.TextChanged += new System.EventHandler(this.txtBule_TextChanged);
+            // 
+            // btnOK
+            // 
+            this.btnOK.Location = new System.Drawing.Point(1375, 11);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(87, 58);
+            this.btnOK.TabIndex = 46;
+            this.btnOK.Text = "确定";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // DGV
             // 
@@ -164,13 +251,13 @@
             this.Column18,
             this.Column19,
             this.Column20});
-            this.DGV.Location = new System.Drawing.Point(18, 54);
-            this.DGV.Margin = new System.Windows.Forms.Padding(2);
+            this.DGV.Location = new System.Drawing.Point(13, 74);
+            this.DGV.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DGV.Name = "DGV";
             this.DGV.RowHeadersWidth = 51;
             this.DGV.RowTemplate.Height = 27;
-            this.DGV.Size = new System.Drawing.Size(1148, 377);
-            this.DGV.TabIndex = 4;
+            this.DGV.Size = new System.Drawing.Size(1448, 496);
+            this.DGV.TabIndex = 48;
             // 
             // Column17
             // 
@@ -364,102 +451,10 @@
             this.Column20.Name = "Column20";
             this.Column20.Width = 125;
             // 
-            // btnAutoPrint
+            // timer1
             // 
-            this.btnAutoPrint.Location = new System.Drawing.Point(567, 17);
-            this.btnAutoPrint.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAutoPrint.Name = "btnAutoPrint";
-            this.btnAutoPrint.Size = new System.Drawing.Size(65, 22);
-            this.btnAutoPrint.TabIndex = 1;
-            this.btnAutoPrint.Text = "自动打印";
-            this.btnAutoPrint.UseVisualStyleBackColor = true;
-            this.btnAutoPrint.Click += new System.EventHandler(this.btnAutoPrint_Click);
-            // 
-            // btnOK
-            // 
-            this.btnOK.Location = new System.Drawing.Point(1097, 4);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(2);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(65, 46);
-            this.btnOK.TabIndex = 21;
-            this.btnOK.Text = "确定";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // cmbGrade
-            // 
-            this.cmbGrade.FormattingEnabled = true;
-            this.cmbGrade.Items.AddRange(new object[] {
-            "HRB400E",
-            "HRB400"});
-            this.cmbGrade.Location = new System.Drawing.Point(722, 4);
-            this.cmbGrade.Name = "cmbGrade";
-            this.cmbGrade.Size = new System.Drawing.Size(69, 20);
-            this.cmbGrade.TabIndex = 27;
-            this.cmbGrade.Text = "HRB400E";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(690, 8);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(29, 12);
-            this.label7.TabIndex = 26;
-            this.label7.Text = "牌号";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(809, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 31;
-            this.label3.Text = "初始轧制号";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(821, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "初始炉号";
-            // 
-            // txtR
-            // 
-            this.txtR.Location = new System.Drawing.Point(876, 29);
-            this.txtR.Name = "txtR";
-            this.txtR.Size = new System.Drawing.Size(74, 21);
-            this.txtR.TabIndex = 29;
-            this.txtR.Text = "C11000217";
-            this.txtR.TextChanged += new System.EventHandler(this.txtF_TextChanged);
-            // 
-            // txtF
-            // 
-            this.txtF.Location = new System.Drawing.Point(876, 4);
-            this.txtF.Name = "txtF";
-            this.txtF.Size = new System.Drawing.Size(74, 21);
-            this.txtF.TabIndex = 28;
-            this.txtF.Text = "21697116";
-            this.txtF.TextChanged += new System.EventHandler(this.txtF_TextChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(965, 7);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 12);
-            this.label6.TabIndex = 33;
-            this.label6.Text = "当前捆包号";
-            // 
-            // txtBule
-            // 
-            this.txtBule.Location = new System.Drawing.Point(1032, 3);
-            this.txtBule.Name = "txtBule";
-            this.txtBule.Size = new System.Drawing.Size(56, 21);
-            this.txtBule.TabIndex = 32;
-            this.txtBule.Text = "7001";
-            this.txtBule.TextChanged += new System.EventHandler(this.txtBule_TextChanged);
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // cmbSpec
             // 
@@ -469,51 +464,61 @@
             "8.0X0",
             "10.0X0",
             "12.0X0"});
-            this.cmbSpec.Location = new System.Drawing.Point(722, 29);
+            this.cmbSpec.Location = new System.Drawing.Point(885, 41);
+            this.cmbSpec.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbSpec.Name = "cmbSpec";
-            this.cmbSpec.Size = new System.Drawing.Size(69, 20);
-            this.cmbSpec.TabIndex = 35;
+            this.cmbSpec.Size = new System.Drawing.Size(91, 23);
+            this.cmbSpec.TabIndex = 50;
             this.cmbSpec.Text = "6.0X0";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(690, 33);
+            this.label4.Location = new System.Drawing.Point(843, 46);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 12);
-            this.label4.TabIndex = 34;
+            this.label4.Size = new System.Drawing.Size(37, 15);
+            this.label4.TabIndex = 49;
             this.label4.Text = "规格";
             // 
-            // MainForm
+            // label3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1002, 46);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(82, 15);
+            this.label3.TabIndex = 51;
+            this.label3.Text = "初始轧制号";
+            // 
+            // MainFrm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1168, 442);
+            this.ClientSize = new System.Drawing.Size(1469, 571);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbSpec);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.DGV);
             this.Controls.Add(this.txtBule);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtR);
             this.Controls.Add(this.txtF);
             this.Controls.Add(this.cmbGrade);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.DGV);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnAutoPrint);
             this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnQuery);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.dateTimePicker1);
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "标牌打印服务";
-            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "MainFrm";
+            this.Text = "MainFrm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrm_FormClosing);
+            this.Load += new System.EventHandler(this.MainFrm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DGV)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -522,12 +527,20 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.Button btnQuery;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtR;
+        private System.Windows.Forms.TextBox txtF;
+        private System.Windows.Forms.ComboBox cmbGrade;
+        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.Button btnAutoPrint;
         private System.Windows.Forms.Button btnPrint;
+        private System.Windows.Forms.Button btnQuery;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.TextBox txtBule;
+        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.DataGridView DGV;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column17;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column21;
@@ -553,18 +566,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column18;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column19;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column20;
-        private System.Windows.Forms.Button btnAutoPrint;
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.ComboBox cmbGrade;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtR;
-        private System.Windows.Forms.TextBox txtF;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txtBule;
+        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ComboBox cmbSpec;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
-
